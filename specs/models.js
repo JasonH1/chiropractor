@@ -71,6 +71,51 @@ define(function (require) {
 					expect(this.deepmodel.get('user.name.first')).to.be.a('string');
 					expect(this.deepmodel.get('user.name.first')).to.eql('Dollar');
 				});
+				it('should be able to do a set deep attribute with array of attributes', function () {
+					this.deepmodel.set('user.attributes', {
+						green: 'New Green',
+						purple: 'Purple'
+					});
+					expect(this.deepmodel.get('user.attributes')).to.be.an('object');
+					expect(this.deepmodel.get('user.attributes')).to.have.property('green');
+					expect(this.deepmodel.get('user.attributes')).to.have.property('purple');
+					expect(this.deepmodel.get('user.attributes.green')).to.be.a('string');
+					expect(this.deepmodel.get('user.attributes.green')).to.eql('New Green');
+					expect(this.deepmodel.get('user.attributes.purple')).to.be.a('string');
+					expect(this.deepmodel.get('user.attributes.purple')).to.eql('Purple');
+				});
+				it('should be able to set new deep property of model', function () {
+					this.deepmodel.set('new.one', 'New attribute');
+					expect(this.deepmodel.get('new')).to.be.an('object');
+					expect(this.deepmodel.get('new')).to.have.property('one');
+					expect(this.deepmodel.get('new.one')).to.be.a('string');
+					expect(this.deepmodel.get('new.one')).to.eql('New attribute');
+				});
+				it('should be able to set deep attribute with deep array of attributes', function () {
+					this.deepmodel.set('deeparray', {
+						first: "Property 1",
+						second: {
+							subfirst: "Property 2.1",
+							subsecond: 2.2
+						}
+					});
+					expect(this.deepmodel.get("deeparray")).to.be.an('object');
+					expect(this.deepmodel.get("deeparray.first")).to.be.a('string');
+					expect(this.deepmodel.get("deeparray.first")).to.eql('Property 1');
+					expect(this.deepmodel.get("deeparray.second")).to.be.an('object');
+					expect(this.deepmodel.get("deeparray.second.subsecond")).to.be.a('number');
+					expect(this.deepmodel.get("deeparray.second.subsecond")).to.eql(2.2);
+				});
+				it('should fire change event upon "user.name.first" attribute gets changed', function () {
+					var eventFired = false,
+						callback = function () {
+							eventFired = true;
+						};
+					this.deepmodel.listenToOnce(this.deepmodel, 'change:user.name.first', callback);
+					expect(eventFired).to.eql(false);
+					this.deepmodel.set('user.name.first', 'Marcher');
+					expect(eventFired).to.eql(true);
+				});
 				it('should submit an authentication token on every request ' +
 					'when the cookie is set.', function () {
 						this.server.respondWith(
