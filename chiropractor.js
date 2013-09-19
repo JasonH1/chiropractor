@@ -3461,83 +3461,83 @@ define('chiropractor/models/auth',['require','backbone','jquery','underscore','j
   return Backbone.Validation;
 }));
 /*global define,setTimeout,clearTimeout*/
-define('chiropractor/models',['require','underscore','./models/auth','backbone.deep.model','backbone.validation'],function (require) {
-	
+define('chiropractor/models',['require','underscore','./models/auth','backbone','backbone.deep.model','backbone.validation'],function (require) {
+    
 
-	var _ = require('underscore'),
-		auth = require('./models/auth'),
-		//Backbone = require('backbone'),
-		Backbone = require('backbone.deep.model'),
-		Validation = require('backbone.validation'),
-		Base;
+    var _ = require('underscore'),
+        auth = require('./models/auth'),
+        Backbone = require('backbone'),
+        BackboneDeepModel = require('backbone.deep.model'),
+        Validation = require('backbone.validation'),
+        Base;
 
 
-	Base = Backbone.DeepModel.extend({
-		sync: function (method, model, options) {
-			// Setup the authentication handlers for the BaseModel
-			auth.sync.call(this, method, model, options);
+    Base = BackboneDeepModel.DeepModel.extend({
+        sync: function (method, model, options) {
+            // Setup the authentication handlers for the BaseModel
+            auth.sync.call(this, method, model, options);
 
-			return Backbone.Model.prototype.sync.call(
-				this, method, model, options
-			);
-		},
+            return BackboneDeepModel.DeepModel.prototype.sync.call(
+                this, method, model, options
+            );
+        },
 
-		parse: function (resp, options) {
-			options = options || {};
-			// We need to unwrap the old WiserTogether API envelop format.
-			if (resp.data && resp.meta) {
-				if (parseInt(resp.meta.status, 10) >= 400) {
-					options.legacyError = true;
-					if (resp.meta.errors && resp.meta.errors.form) {
-						this.validationError = resp.meta.errors.form;
-						this.trigger(
-							'invalid',
-							this,
-							this.validationError,
-							_.extend(options || {}, {
-								validationError: this.validationError
-							})
-						);
-					} else {
-						this.trigger('error', this, resp.data, options);
+        parse: function (resp, options) {
+            options = options || {};
+            // We need to unwrap the old WiserTogether API envelop format.
+            if (resp.data && resp.meta) {
+                if (parseInt(resp.meta.status, 10) >= 400) {
+                    options.legacyError = true;
+                    if (resp.meta.errors && resp.meta.errors.form) {
+                        this.validationError = resp.meta.errors.form;
+                        this.trigger(
+                            'invalid',
+                            this,
+                            this.validationError,
+                            _.extend(options || {}, {
+                                validationError: this.validationError
+                            })
+                        );
+                    } else {
+                        this.trigger('error', this, resp.data, options);
 
-						if (options.error) {
-							options.error(this, resp.data, options);
-						}
-					}
-					// We do not want an error response to update the model
-					// attributes (returning an empty object leaves the model
-					// state as it was
-					return {};
-				}
-				return resp.data;
-			}
-			return Backbone.Model.prototype.parse.apply(this, arguments);
-		},
+                        if (options.error) {
+                            options.error(this, resp.data, options);
+                        }
+                    }
+                    // We do not want an error response to update the model
+                    // attributes (returning an empty object leaves the model
+                    // state as it was
+                    return {};
+                }
+                return resp.data;
+            }
+            return Backbone.Model.prototype.parse.apply(this, arguments);
+        },
 
-		fieldId: function (field, prefix) {
-			prefix = prefix || 'formfield';
-			return [prefix, field, this.cid].join('-');
-		},
+        fieldId: function (field, prefix) {
+            prefix = prefix || 'formfield';
+            return [prefix, field, this.cid].join('-');
+        },
 
-		set: function (attrs, options) {
-			// We need to allow the legacy errors to short circuit the Backbone
-			// success handler in the case of a legacy server error.
-			if (options && options.legacyError) {
-				delete options.legacyError;
-				return false;
-			}
+        set: function (attrs, options) {
+            // We need to allow the legacy errors to short circuit the Backbone
+            // success handler in the case of a legacy server error.
+            if (options && options.legacyError) {
+                delete options.legacyError;
+                return false;
+            }
 
-			return Backbone.Model.prototype.set.apply(this, arguments);
-		}
-	});
+            return BackboneDeepModel.DeepModel.prototype.set.apply(this, arguments);
+        }
+    });
 
-	_.extend(Base.prototype, Validation.mixin);
+    _.extend(Base.prototype, Validation.mixin);
 
-	return {
-		Base: Base,
-		cleanup: auth.cleanup
-	};
+    return {
+        Base: Base,
+        cleanup: auth.cleanup
+    };
 });
 /*global define*/
 define('chiropractor/collections',['require','backbone'],function(require) {
