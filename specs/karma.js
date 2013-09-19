@@ -25,6 +25,7 @@ require.config({
         'jquery.cookie':        'bower_components/jquery.cookie/jquery.cookie',
         'backbone.subroute':    'bower_components/backbone.subroute/backbone.subroute',
         'backbone.validation':  'bower_components/backbone-validation/dist/backbone-validation-amd',
+        'backbone.deep.model': 'bower_components/backbone-deep-model/distribution/deep-model',
         // Testing Dependencies
         'sinon':                'bower_components/sinonjs/sinon',
         'es5-shim':             'bower_components/es5-shim/es5-shim',
@@ -51,6 +52,10 @@ require.config({
         'backbone': {
             deps: ['jquery', 'underscore'],
             exports: 'Backbone'
+        },
+        'backbone.deep.model': {
+          deps: ['jquery', 'underscore'],
+          exports: 'BackboneDeepModel'
         },
         'underscore': {
             exports: '_'
