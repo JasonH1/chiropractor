@@ -5,16 +5,17 @@ define(function(require) {
     var Backbone = require('backbone'),
         _ = require('underscore'),
         auth = require('./models/auth'),
+        BackboneDeepModel = require('backbone.deep.model'),
         Validation = require('backbone.validation'),
         Base;
 
 
-    Base = Backbone.Model.extend({
+    Base = BackboneDeepModel.DeepModel.extend({
         sync: function(method, model, options) {
             // Setup the authentication handlers for the BaseModel
             auth.sync.call(this, method, model, options);
 
-            return Backbone.Model.prototype.sync.call(
+            return BackboneDeepModel.DeepModel.prototype.sync.call(
                 this, method, model, options
             );
         },
@@ -66,7 +67,7 @@ define(function(require) {
                 return false;
             }
 
-            return Backbone.Model.prototype.set.apply(this, arguments);
+            return BackboneDeepModel.DeepModel.prototype.set.apply(this, arguments);
         }
     });
 
