@@ -35,10 +35,6 @@ require.config({
     },
 
     shim: {
-        'backbone.deep.model': {
-            deps: ['jquery', 'underscore'],
-            exports: 'BackboneDeepModel'
-        },
         'backbone': {
             deps: ['jquery', 'underscore'],
             exports: 'Backbone'

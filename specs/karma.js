@@ -53,10 +53,6 @@ require.config({
             deps: ['jquery', 'underscore'],
             exports: 'Backbone'
         },
-        'backbone.deep.model': {
-          deps: ['jquery', 'underscore'],
-          exports: 'BackboneDeepModel'
-        },
         'underscore': {
             exports: '_'
         },

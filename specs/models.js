@@ -11,7 +11,6 @@ define(function(require) {
         describe = require('mocha').describe,
         it = require('mocha').it,
         sinon = require('sinon'),
-        BackboneDeepModel = require('backbone.deep.model'),
         Chiropractor = require('chiropractor'),
         Models = require('chiropractor/models');
 
