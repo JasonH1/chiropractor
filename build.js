@@ -1,8 +1,7 @@
 require.config({
-    packages: [{
-        name: "chiropractor",
-        location: 'src'
-    }],
+    packages: [
+        {name: "chiropractor", location: 'src'}
+    ],
 
     hbs: {
         disableI18n: true,
@@ -10,19 +9,19 @@ require.config({
     },
 
     paths: {
-        'handlebars': 'bower_components/require-handlebars-plugin/Handlebars',
-        'hbs': 'bower_components/require-handlebars-plugin/hbs',
-        'i18nprecompile': 'bower_components/require-handlebars-plugin/hbs/i18nprecompile',
-        'text': 'bower_components/requirejs-plugins/lib/text',
-        'json': 'bower_components/requirejs-plugins/src/json',
-        'json2': 'bower_components/require-handlebars-plugin/hbs/json2',
-        'json3': 'bower_components/json3/lib/json3',
-        'underscore': 'bower_components/underscore/underscore',
-        'backbone': 'bower_components/backbone-amd/backbone',
-        'jquery': 'bower_components/jquery/jquery',
-        'jquery.cookie': 'bower_components/jquery.cookie/jquery.cookie',
-        'backbone.subroute': 'bower_components/backbone.subroute/backbone.subroute',
-        'backbone.validation': 'bower_components/backbone-validation/dist/backbone-validation-amd',
+        'handlebars':           'bower_components/require-handlebars-plugin/Handlebars',
+        'hbs':                  'bower_components/require-handlebars-plugin/hbs',
+        'i18nprecompile':       'bower_components/require-handlebars-plugin/hbs/i18nprecompile',
+        'text':                 'bower_components/requirejs-plugins/lib/text',
+        'json':                 'bower_components/requirejs-plugins/src/json',
+        'json2':                'bower_components/require-handlebars-plugin/hbs/json2',
+        'json3':                'bower_components/json3/lib/json3',
+        'underscore':           'bower_components/underscore/underscore',
+        'backbone':             'bower_components/backbone-amd/backbone',
+        'jquery':               'bower_components/jquery/jquery',
+        'jquery.cookie':        'bower_components/jquery.cookie/jquery.cookie',
+        'backbone.subroute':    'bower_components/backbone.subroute/backbone.subroute',
+        'backbone.validation':  'bower_components/backbone-validation/dist/backbone-validation-amd',
         'backbone.deep.model': 'bower_components/backbone-deep-model/distribution/deep-model'
     },
 
@@ -30,16 +29,12 @@ require.config({
     wrap: true,
 
     pragmasOnSave: {
-        excludeHbsParser: true,
+        excludeHbsParser : true,
         excludeHbs: true,
         excludeAfterBuild: true
     },
 
     shim: {
-        'backbone.deep.model': {
-            deps: ['jquery', 'underscore'],
-            exports: 'BackboneDeepModel'
-        },
         'backbone': {
             deps: ['jquery', 'underscore'],
             exports: 'Backbone'

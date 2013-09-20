@@ -1,17 +1,17 @@
 /*global define,setTimeout,clearTimeout*/
-define(function (require) {
+define(function(require) {
     'use strict';
 
-    var _ = require('underscore'),
+    var Backbone = require('backbone'),
+        _ = require('underscore'),
         auth = require('./models/auth'),
-        Backbone = require('backbone'),
         BackboneDeepModel = require('backbone.deep.model'),
         Validation = require('backbone.validation'),
         Base;
 
 
     Base = BackboneDeepModel.DeepModel.extend({
-        sync: function (method, model, options) {
+        sync: function(method, model, options) {
             // Setup the authentication handlers for the BaseModel
             auth.sync.call(this, method, model, options);
 
@@ -20,7 +20,7 @@ define(function (require) {
             );
         },
 
-        parse: function (resp, options) {
+        parse: function(resp, options) {
             options = options || {};
             // We need to unwrap the old WiserTogether API envelop format.
             if (resp.data && resp.meta) {
@@ -36,7 +36,8 @@ define(function (require) {
                                 validationError: this.validationError
                             })
                         );
-                    } else {
+                    }
+                    else {
                         this.trigger('error', this, resp.data, options);
 
                         if (options.error) {
@@ -53,12 +54,12 @@ define(function (require) {
             return Backbone.Model.prototype.parse.apply(this, arguments);
         },
 
-        fieldId: function (field, prefix) {
+        fieldId: function(field, prefix) {
             prefix = prefix || 'formfield';
             return [prefix, field, this.cid].join('-');
         },
 
-        set: function (attrs, options) {
+        set: function(attrs, options) {
             // We need to allow the legacy errors to short circuit the Backbone
             // success handler in the case of a legacy server error.
             if (options && options.legacyError) {
