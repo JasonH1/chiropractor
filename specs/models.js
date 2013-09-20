@@ -1,5 +1,5 @@
 /*global define,setTimeout*/
-define(function(require) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery'),
@@ -16,9 +16,9 @@ define(function(require) {
 
     require('jquery.cookie');
 
-    return function() {
-        describe('unauthenticated', function() {
-            beforeEach(function() {
+    return function () {
+        describe('unauthenticated', function () {
+            beforeEach(function () {
                 this.time = (new Date()).getTime();
                 this.path = '/';
                 this.token = 'Token a::' + this.time + '::' +
@@ -48,12 +48,12 @@ define(function(require) {
 
             });
 
-            afterEach(function() {
+            afterEach(function () {
                 this.model.stopListening();
                 Models.cleanup();
             });
 
-            describe('Base', function() {
+            describe('Base', function () {
                 it('should be able to get deep attributes', function () {
                     expect(this.deepmodel.get('user.name.first')).to.be.a('string');
                     expect(this.deepmodel.get('user.name.first')).to.eql('Sterling');
@@ -70,163 +70,252 @@ define(function(require) {
                     expect(this.deepmodel.get('user.name.first')).to.be.a('string');
                     expect(this.deepmodel.get('user.name.first')).to.eql('Dollar');
                 });
+                it('should be able to do a set deep attribute with array of attributes', function () {
+                    this.deepmodel.set('user.attributes', {
+                        green: 'New Green',
+                        purple: 'Purple'
+                    });
+                    expect(this.deepmodel.get('user.attributes')).to.be.an('object');
+                    expect(this.deepmodel.get('user.attributes')).to.have.property('green');
+                    expect(this.deepmodel.get('user.attributes')).to.have.property('purple');
+                    expect(this.deepmodel.get('user.attributes.green')).to.be.a('string');
+                    expect(this.deepmodel.get('user.attributes.green')).to.eql('New Green');
+                    expect(this.deepmodel.get('user.attributes.purple')).to.be.a('string');
+                    expect(this.deepmodel.get('user.attributes.purple')).to.eql('Purple');
+                });
+                it('should be able to set new deep property of model', function () {
+                    this.deepmodel.set('new.one', 'New attribute');
+                    expect(this.deepmodel.get('new')).to.be.an('object');
+                    expect(this.deepmodel.get('new')).to.have.property('one');
+                    expect(this.deepmodel.get('new.one')).to.be.a('string');
+                    expect(this.deepmodel.get('new.one')).to.eql('New attribute');
+                });
+                it('should be able to set deep attribute with deep array of attributes', function () {
+                    this.deepmodel.set('deeparray', {
+                        first: "Property 1",
+                        second: {
+                            subfirst: "Property 2.1",
+                            subsecond: 2.2
+                        }
+                    });
+                    expect(this.deepmodel.get("deeparray")).to.be.an('object');
+                    expect(this.deepmodel.get("deeparray.first")).to.be.a('string');
+                    expect(this.deepmodel.get("deeparray.first")).to.eql('Property 1');
+                    expect(this.deepmodel.get("deeparray.second")).to.be.an('object');
+                    expect(this.deepmodel.get("deeparray.second.subsecond")).to.be.a('number');
+                    expect(this.deepmodel.get("deeparray.second.subsecond")).to.eql(2.2);
+                });
+                it('should fire change event upon some deep attribute gets changed', function () {
+                    var eventFired = false,
+                        callback = function () {
+                            eventFired = true;
+                        };
+                    this.deepmodel.listenToOnce(this.deepmodel, 'change:user.name.first', callback);
+                    expect(eventFired).to.eql(false);
+                    this.deepmodel.set('user.name.first', 'John');
+                    expect(eventFired).to.eql(true);
+                });
+                it('should fire change event upon some nested attribute gets changed', function () {
+                    var eventFired = false,
+                        callback = function () {
+                            eventFired = true;
+                        };
+                    this.deepmodel.listenToOnce(this.deepmodel, 'change:user.*', callback);
+                    expect(eventFired).to.eql(false);
+                    this.deepmodel.set('user.name.first', 'John');
+                    expect(eventFired).to.eql(true);
+                });
+                it('should be able to change deep attribute without firing of change event', function () {
+                    var eventFired = false,
+                        callback = function () {
+                            eventFired = true;
+                        };
+                    this.deepmodel.listenToOnce(this.deepmodel, 'change:user.name.first', callback);
+                    expect(this.deepmodel.get("user.name.first")).to.eql('Sterling');
+                    expect(eventFired).to.eql(false);
+                    this.deepmodel.set('user.name.first', 'John', {
+                        silent: true
+                    });
+                    expect(this.deepmodel.get("user.name.first")).to.eql('John');
+                    expect(eventFired).to.eql(false);
+                });
+                it('should be able to unset deep attributes', function () {
+                    expect(this.deepmodel.get("user.type")).to.be.a('string');
+                    expect(this.deepmodel.get("user.type")).to.eql('Spy');
+                    this.deepmodel.set("user.type", null);
+                    expect(this.deepmodel.get("user.type")).to.be.a('null');
+                    this.deepmodel.set("user.type", null, {
+                        unset: true
+                    });
+                    expect(this.deepmodel.get("user.type")).to.be.an('undefined');
+                });
+                it('should be able to unset deep array of attributes', function () {
+                    expect(this.deepmodel.get("user")).to.be.an('object');
+                    this.deepmodel.set("user", null, {
+                        unset: true
+                    });
+                    expect(this.deepmodel.get("user")).to.be.an('undefined');
+                });
                 it('should submit an authentication token on every request ' +
-                   'when the cookie is set.', function() {
-                       this.server.respondWith(
-                            this.path,
-                            [200, {'Authorization': this.token}, '{"test": 1}']
-                       );
+                    'when the cookie is set.', function () {
+                        this.server.respondWith(
+                            this.path, [200, {
+                                'Authorization': this.token
+                            }, '{"test": 1}']
+                        );
 
-                       this.model.fetch();
-                       this.server.respond();
+                        this.model.fetch();
+                        this.server.respond();
 
-                       expect(this.server.requests.length).to.equal(1);
+                        expect(this.server.requests.length).to.equal(1);
 
-                       var authHeader = this.server.requests[0]
+                        var authHeader = this.server.requests[0]
                             .requestHeaders.Authorization;
 
-                       expect(authHeader).to.equal(this.token);
+                        expect(authHeader).to.equal(this.token);
                     });
 
                 it('should submit an authentication token on every ' +
-                   'request if the cookie is not set but a token was ' +
-                   'received from the server.', function() {
-                       $.removeCookie('wttoken');
+                    'request if the cookie is not set but a token was ' +
+                    'received from the server.', function () {
+                        $.removeCookie('wttoken');
 
-                       this.server.respondWith(
+                        this.server.respondWith(
+                            this.path, [200, {
+                                'Authorization': this.token
+                            }, '{"test": 1}']
+                        );
+
+                        this.model.fetch();
+                        this.server.respond();
+
+                        $.removeCookie('wttoken');
+
+                        this.server.respondWith(
                             this.path,
-                            [200, {'Authorization': this.token}, '{"test": 1}']
-                       );
+                            '{"test": 1}'
+                        );
 
-                       this.model.fetch();
-                       this.server.respond();
+                        this.model.fetch();
+                        this.server.respond();
 
-                       $.removeCookie('wttoken');
+                        expect(this.server.requests.length).to.equal(2);
 
-                       this.server.respondWith(
-                            this.path,
-                           '{"test": 1}'
-                       );
-
-                       this.model.fetch();
-                       this.server.respond();
-
-                       expect(this.server.requests.length).to.equal(2);
-
-                       var authHeader = this.server.requests[1]
+                        var authHeader = this.server.requests[1]
                             .requestHeaders.Authorization;
 
-                       expect(authHeader).to.be.equal(this.token);
+                        expect(authHeader).to.be.equal(this.token);
                     });
 
                 it('should not submit an authentication token on every ' +
-                   'request when the cookie is not set.', function() {
-                       $.removeCookie('wttoken');
+                    'request when the cookie is not set.', function () {
+                        $.removeCookie('wttoken');
 
-                       this.server.respondWith(
-                            this.path,
-                            [200, {'Authorization': this.token}, '{"test": 1}']
-                       );
+                        this.server.respondWith(
+                            this.path, [200, {
+                                'Authorization': this.token
+                            }, '{"test": 1}']
+                        );
 
 
-                       this.model.fetch();
-                       this.server.respond();
+                        this.model.fetch();
+                        this.server.respond();
 
-                       expect(this.server.requests.length).to.equal(1);
+                        expect(this.server.requests.length).to.equal(1);
 
-                       var authHeader = this.server.requests[0]
+                        var authHeader = this.server.requests[0]
                             .requestHeaders.Authorization;
 
-                       expect(authHeader).to.be.a('undefined');
+                        expect(authHeader).to.be.a('undefined');
                     });
 
                 it('should not submit an authentication token request when ' +
-                   'the model toggled disableAuthToken.', function() {
-                       this.model.disableAuthToken = true;
+                    'the model toggled disableAuthToken.', function () {
+                        this.model.disableAuthToken = true;
 
-                       this.server.respondWith(
-                            this.path,
-                            [200, {'Authorization': this.token}, '{"test": 1}']
-                       );
+                        this.server.respondWith(
+                            this.path, [200, {
+                                'Authorization': this.token
+                            }, '{"test": 1}']
+                        );
 
-                       this.model.fetch();
-                       this.server.respond();
+                        this.model.fetch();
+                        this.server.respond();
 
-                       expect(this.server.requests.length).to.equal(1);
+                        expect(this.server.requests.length).to.equal(1);
 
-                       var authHeader = this.server.requests[0]
+                        var authHeader = this.server.requests[0]
                             .requestHeaders.Authorization;
 
-                       expect(authHeader).to.be.a('undefined');
+                        expect(authHeader).to.be.a('undefined');
                     });
 
                 it('should trigger a global unauthenticated event when it ' +
-                   'receives a 401 response from the server.', function() {
-                       var callback = sinon.spy();
+                    'receives a 401 response from the server.', function () {
+                        var callback = sinon.spy();
 
-                       this.model.listenToOnce(
+                        this.model.listenToOnce(
                             Chiropractor.Events,
                             'authentication:failure',
                             callback
                         );
 
-                       this.server.respondWith(
-                            this.path,
-                            [
-                                401,
-                                {'Content-Type': 'application/json'},
+                        this.server.respondWith(
+                            this.path, [
+                                401, {
+                                    'Content-Type': 'application/json'
+                                },
                                 'Not Authorized'
                             ]
-                       );
+                        );
 
-                       this.model.fetch();
-                       this.server.respond();
+                        this.model.fetch();
+                        this.server.respond();
 
-                       expect(this.server.requests.length).to.equal(1);
+                        expect(this.server.requests.length).to.equal(1);
 
-                       expect(callback.calledOnce).to.equal(true);
-                   });
+                        expect(callback.calledOnce).to.equal(true);
+                    });
 
                 it('should retry any requests that fail due to being ' +
                     'unauthenticated when the global authenticated event is ' +
-                    'triggered', function() {
-                       var callCount = 0;
-                       this.server.respondWith(
+                    'triggered', function () {
+                        var callCount = 0;
+                        this.server.respondWith(
                             this.path,
-                            function(xhr) {
+                            function (xhr) {
                                 var status = callCount === 0 ? 401 : 200;
                                 callCount += 1;
                                 xhr.respond(
-                                    status,
-                                    {'Content-Type': 'application/json'},
+                                    status, {
+                                        'Content-Type': 'application/json'
+                                    },
                                     '{"test": 3}'
                                 );
                             }
                         );
 
-                       this.model.fetch();
-                       this.server.respond();
+                        this.model.fetch();
+                        this.server.respond();
 
-                       expect(this.server.requests.length).to.equal(1);
+                        expect(this.server.requests.length).to.equal(1);
 
-                       Chiropractor.Events.trigger('authentication:success');
+                        Chiropractor.Events.trigger('authentication:success');
 
-                       this.server.respond();
-                       expect(this.server.requests.length).to.equal(2);
-                   });
+                        this.server.respond();
+                        expect(this.server.requests.length).to.equal(2);
+                    });
             });
         });
 
-        describe('authenticated', function() {
-            beforeEach(function() {
+        describe('authenticated', function () {
+            beforeEach(function () {
                 $.removeCookie('wttoken');
                 this.path = '/';
                 this.token = 'Token abc';
                 this.server.respondWith(
-                    this.path,
-                    [
-                        200,
-                        {
+                    this.path, [
+                        200, {
                             'Content-Type': 'application/json',
                             'Authorization': this.token
                         },
@@ -238,44 +327,44 @@ define(function(require) {
                 this.model.url = this.path;
             });
 
-            afterEach(function() {
+            afterEach(function () {
                 this.model.stopListening();
             });
 
             it('should update the wttoken cookie to store the Authorization ' +
-               'token returned by the server.', function() {
-                expect($.cookie('wttoken')).to.equal(null);
+                'token returned by the server.', function () {
+                    expect($.cookie('wttoken')).to.equal(null);
 
-                this.model.fetch();
-                this.server.respond();
+                    this.model.fetch();
+                    this.server.respond();
 
-                expect(this.server.requests.length).to.equal(1);
+                    expect(this.server.requests.length).to.equal(1);
 
-                expect($.cookie('wttoken')).to.equal(this.token);
-            });
+                    expect($.cookie('wttoken')).to.equal(this.token);
+                });
         });
 
-        describe('legacy response parsing', function() {
-            beforeEach(function() {
+        describe('legacy response parsing', function () {
+            beforeEach(function () {
                 this.path = '/';
                 this.model = new Models.Base();
                 this.model.url = this.path;
             });
 
-            afterEach(function() {
+            afterEach(function () {
                 this.model.stopListening();
             });
 
-            it('should handle non-legacy responses as normal.', function() {
+            it('should handle non-legacy responses as normal.', function () {
                 var modelData = {
                     name: 'test'
                 };
 
                 this.server.respondWith(
-                    this.path,
-                    [
-                        200,
-                        {'Content-Type': 'application/json'},
+                    this.path, [
+                        200, {
+                            'Content-Type': 'application/json'
+                        },
                         JSON.stringify(modelData)
                     ]
                 );
@@ -286,18 +375,18 @@ define(function(require) {
                 expect(this.model.attributes).to.eql(modelData);
             });
 
-            it('should extract the data from legacy responses.', function() {
+            it('should extract the data from legacy responses.', function () {
                 var modelData = {
-                        name: 'test'
-                    },
+                    name: 'test'
+                },
                     syncSpy = this.sandbox.spy(),
                     errorSpy = this.sandbox.spy();
 
                 this.server.respondWith(
-                    this.path,
-                    [
-                        200,
-                        {'Content-Type': 'application/json'},
+                    this.path, [
+                        200, {
+                            'Content-Type': 'application/json'
+                        },
                         JSON.stringify({
                             data: modelData,
                             meta: {
@@ -308,7 +397,9 @@ define(function(require) {
                 );
 
                 this.model.listenTo(this.model, 'sync', syncSpy);
-                this.model.fetch({error: errorSpy});
+                this.model.fetch({
+                    error: errorSpy
+                });
                 this.server.respond();
 
                 expect(errorSpy.callCount).to.equal(0);
@@ -317,216 +408,219 @@ define(function(require) {
             });
 
             it('should ensure that legacy errors (which come back as 200 ' +
-               'responses with an meta.status code !== 200 are converted to ' +
-               'Backbone errors and the underlying errors are extracted ' +
-               'and the model data stays untouched.', function() {
-                var modelData = {
+                'responses with an meta.status code !== 200 are converted to ' +
+                'Backbone errors and the underlying errors are extracted ' +
+                'and the model data stays untouched.', function () {
+                    var modelData = {
                         name: 'tests'
                     },
-                    initialData = {
-                        initialData: 'foo'
-                    },
-                    syncSpy = this.sandbox.spy(),
-                    errorSpy = this.sandbox.spy();
+                        initialData = {
+                            initialData: 'foo'
+                        },
+                        syncSpy = this.sandbox.spy(),
+                        errorSpy = this.sandbox.spy();
 
-                this.server.respondWith(
-                    this.path,
-                    [
-                        200,
-                        {'Content-Type': 'application/json'},
-                        JSON.stringify({
-                            data: modelData,
-                            meta: {
-                                status: 400
-                            }
-                        })
-                    ]
-                );
+                    this.server.respondWith(
+                        this.path, [
+                            200, {
+                                'Content-Type': 'application/json'
+                            },
+                            JSON.stringify({
+                                data: modelData,
+                                meta: {
+                                    status: 400
+                                }
+                            })
+                        ]
+                    );
 
-                this.model.set(initialData);
+                    this.model.set(initialData);
 
-                this.model.listenTo(this.model, 'sync', syncSpy);
-                this.model.fetch({error: errorSpy});
-                this.server.respond();
+                    this.model.listenTo(this.model, 'sync', syncSpy);
+                    this.model.fetch({
+                        error: errorSpy
+                    });
+                    this.server.respond();
 
-                expect(errorSpy.callCount).to.equal(1);
-                expect(syncSpy.callCount).to.equal(0);
+                    expect(errorSpy.callCount).to.equal(1);
+                    expect(syncSpy.callCount).to.equal(0);
 
-                // The third argument is the options object which we cannot
-                // know at this time.
-                expect(errorSpy.lastCall.args.splice(0, 2))
-                    .to.eql([this.model, this.model]);
+                    // The third argument is the options object which we cannot
+                    // know at this time.
+                    expect(errorSpy.lastCall.args.splice(0, 2))
+                        .to.eql([this.model, this.model]);
 
-                // Ensure that even through we got back data from the server
-                // that since this is a 400 response we do not wish to update
-                // the model with that data.
-                expect(this.model.attributes).to.eql(initialData);
-            });
+                    // Ensure that even through we got back data from the server
+                    // that since this is a 400 response we do not wish to update
+                    // the model with that data.
+                    expect(this.model.attributes).to.eql(initialData);
+                });
 
             it('should trigger invalid event when the server sends back form ' +
-               'errors.', function() {
-                var errors = {
+                'errors.', function () {
+                    var errors = {
                         form: {
                             '__all__': ['Error']
                         }
                     },
-                    invalidSpy = this.sandbox.spy(),
-                    syncSpy = this.sandbox.spy(),
-                    errorSpy = this.sandbox.spy();
+                        invalidSpy = this.sandbox.spy(),
+                        syncSpy = this.sandbox.spy(),
+                        errorSpy = this.sandbox.spy();
 
-                this.server.respondWith(
-                    this.path,
-                    [
-                        200,
-                        {'Content-Type': 'application/json'},
-                        JSON.stringify({
-                            data: {},
-                            meta: {
-                                status: 400,
-                                errors: errors
-                            }
-                        })
-                    ]
-                );
+                    this.server.respondWith(
+                        this.path, [
+                            200, {
+                                'Content-Type': 'application/json'
+                            },
+                            JSON.stringify({
+                                data: {},
+                                meta: {
+                                    status: 400,
+                                    errors: errors
+                                }
+                            })
+                        ]
+                    );
 
-                this.model.listenTo(this.model, 'invalid', invalidSpy);
-                this.model.listenTo(this.model, 'sync', syncSpy);
-                this.model.listenTo(this.model, 'error', errorSpy);
+                    this.model.listenTo(this.model, 'invalid', invalidSpy);
+                    this.model.listenTo(this.model, 'sync', syncSpy);
+                    this.model.listenTo(this.model, 'error', errorSpy);
 
-                this.model.fetch();
-                this.server.respond();
+                    this.model.fetch();
+                    this.server.respond();
 
-                expect(invalidSpy.callCount).to.equal(1);
-                expect(syncSpy.callCount).to.equal(0);
-                expect(errorSpy.callCount).to.equal(0);
+                    expect(invalidSpy.callCount).to.equal(1);
+                    expect(syncSpy.callCount).to.equal(0);
+                    expect(errorSpy.callCount).to.equal(0);
 
-                // The third argument is the options object which we cannot
-                // know at this time.
-                expect(invalidSpy.lastCall.args.splice(0, 2))
-                    .to.eql([this.model, errors.form]);
-            });
+                    // The third argument is the options object which we cannot
+                    // know at this time.
+                    expect(invalidSpy.lastCall.args.splice(0, 2))
+                        .to.eql([this.model, errors.form]);
+                });
 
             it('should trigger an authentication expiration warning when the ' +
-               'authentication token is going to expire in less than 2 ' +
-               'minutes.', function(done) {
-                var spy = this.sandbox.spy();
+                'authentication token is going to expire in less than 2 ' +
+                'minutes.', function (done) {
+                    var spy = this.sandbox.spy();
 
-                this.token = 'Token a::' + this.time + '::' +
-                    (this.time + 120 - 1) + '::hmac';
-
-                $.cookie('wttoken', this.token);
-
-                this.model.listenTo(
-                    Chiropractor.Events,
-                    'authentication:expiration',
-                    spy
-                );
-
-                setTimeout(function() {
-                    try {
-                        expect(spy.callCount).to.equal(1);
-                        done();
-                    }
-                    catch (e) {
-                        done(e);
-                    }
-                }, 30);
-
-                this.server.respondWith(
-                    this.path,
-                    [200, {'Authorization': this.token}, '{"test": 1}']
-                );
-
-                this.model.fetch();
-                this.server.respond();
-            });
-
-            it('should not trigger an authentication expiration warning when ' +
-               'the authentication token is greater than 2 minutes from ' +
-               'expiring.', function(done) {
-                var spy = this.sandbox.spy();
-
-                this.token = 'Token a::' + this.time + '::' +
-                    (this.time + 120 + 1) + '::hmac';
-
-                $.cookie('wttoken', this.token);
-
-                this.model.listenTo(
-                    Chiropractor.Events,
-                    'authentication:expiration',
-                    spy
-                );
-
-                setTimeout(function() {
-                    try {
-                        expect(spy.callCount).to.equal(0);
-                        done();
-                    }
-                    catch (e) {
-                        done(e);
-                    }
-                }, 30);
-
-                this.server.respondWith(
-                    this.path,
-                    [200, {'Authorization': this.token}, '{"test": 1}']
-                );
-
-                this.model.fetch();
-                this.server.respond();
-            });
-
-            it('should trigger an authentication expiration resolution when ' +
-               'the authentication token is renewed after the expiration ' +
-               'warning event was triggered.', function(done) {
-                var warningSpy = this.sandbox.spy(),
-                    resolveSpy = this.sandbox.spy(),
-                    token = 'Token a::' + this.time + '::' +
+                    this.token = 'Token a::' + this.time + '::' +
                         (this.time + 120 - 1) + '::hmac';
 
-                $.cookie('wttoken', token);
+                    $.cookie('wttoken', this.token);
 
-                this.model.listenTo(
-                    Chiropractor.Events,
-                    'authentication:expiration',
-                    warningSpy
-                );
+                    this.model.listenTo(
+                        Chiropractor.Events,
+                        'authentication:expiration',
+                        spy
+                    );
 
-                this.model.listenTo(
-                    Chiropractor.Events,
-                    'authentication:renewal',
-                    resolveSpy
-                );
+                    setTimeout(function () {
+                        try {
+                            expect(spy.callCount).to.equal(1);
+                            done();
+                        } catch (e) {
+                            done(e);
+                        }
+                    }, 30);
 
-                setTimeout(_(function() {
-                    try {
-                        expect(warningSpy.callCount).to.equal(1);
+                    this.server.respondWith(
+                        this.path, [200, {
+                            'Authorization': this.token
+                        }, '{"test": 1}']
+                    );
 
-                        this.model.url = '/resolved/';
-                        this.server.respondWith(
-                            '/resolved/',
-                            [200, {'Authorization': this.token}, '{"test": 1}']
-                        );
+                    this.model.fetch();
+                    this.server.respond();
+                });
 
-                        this.model.fetch();
-                        this.server.respond();
+            it('should not trigger an authentication expiration warning when ' +
+                'the authentication token is greater than 2 minutes from ' +
+                'expiring.', function (done) {
+                    var spy = this.sandbox.spy();
 
-                        expect(resolveSpy.callCount).to.equal(1);
-                        done();
-                    }
-                    catch (e) {
-                        done(e);
-                    }
-                }).bind(this), 30);
+                    this.token = 'Token a::' + this.time + '::' +
+                        (this.time + 120 + 1) + '::hmac';
 
-                this.server.respondWith(
-                    this.path,
-                    [200, {'Authorization': token}, '{"test": 1}']
-                );
+                    $.cookie('wttoken', this.token);
 
-                this.model.fetch();
-                this.server.respond();
-            });
+                    this.model.listenTo(
+                        Chiropractor.Events,
+                        'authentication:expiration',
+                        spy
+                    );
+
+                    setTimeout(function () {
+                        try {
+                            expect(spy.callCount).to.equal(0);
+                            done();
+                        } catch (e) {
+                            done(e);
+                        }
+                    }, 30);
+
+                    this.server.respondWith(
+                        this.path, [200, {
+                            'Authorization': this.token
+                        }, '{"test": 1}']
+                    );
+
+                    this.model.fetch();
+                    this.server.respond();
+                });
+
+            it('should trigger an authentication expiration resolution when ' +
+                'the authentication token is renewed after the expiration ' +
+                'warning event was triggered.', function (done) {
+                    var warningSpy = this.sandbox.spy(),
+                        resolveSpy = this.sandbox.spy(),
+                        token = 'Token a::' + this.time + '::' +
+                            (this.time + 120 - 1) + '::hmac';
+
+                    $.cookie('wttoken', token);
+
+                    this.model.listenTo(
+                        Chiropractor.Events,
+                        'authentication:expiration',
+                        warningSpy
+                    );
+
+                    this.model.listenTo(
+                        Chiropractor.Events,
+                        'authentication:renewal',
+                        resolveSpy
+                    );
+
+                    setTimeout(_(function () {
+                        try {
+                            expect(warningSpy.callCount).to.equal(1);
+
+                            this.model.url = '/resolved/';
+                            this.server.respondWith(
+                                '/resolved/', [200, {
+                                    'Authorization': this.token
+                                }, '{"test": 1}']
+                            );
+
+                            this.model.fetch();
+                            this.server.respond();
+
+                            expect(resolveSpy.callCount).to.equal(1);
+                            done();
+                        } catch (e) {
+                            done(e);
+                        }
+                    }).bind(this), 30);
+
+                    this.server.respondWith(
+                        this.path, [200, {
+                            'Authorization': token
+                        }, '{"test": 1}']
+                    );
+
+                    this.model.fetch();
+                    this.server.respond();
+                });
         });
     };
 });
