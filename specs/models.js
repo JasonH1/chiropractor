@@ -70,6 +70,24 @@ define(function(require) {
                     expect(this.deepmodel.get('user.name.first')).to.be.a('string');
                     expect(this.deepmodel.get('user.name.first')).to.eql('Dollar');
                 });
+                it('should be able to add non-existing deep attributes', function(){
+                    this.deepmodel.set('user.name.middle', "Test");
+                    expect(this.deepmodel.get('user.name.middle')).to.eql('Test');    
+                    this.deepmodel.set('user.alternativeAttributes', {
+                            preferColor: 'Yellow'
+                        });
+                    expect(this.deepmodel.get('user.alternativeAttributes.preferColor')).to.eql('Yellow');
+                });
+                it('should be able to fire change events when deep attributes changed', function(){
+                    var firstNameSpy = this.sandbox.spy();
+                    var userSpy = this.sandbox.spy();
+                    this.deepmodel.bind('change:user.name.first', firstNameSpy);
+                    this.deepmodel.set('user.name.first', 'Dollar');
+                    expect(firstNameSpy.callCount).to.eql(1);
+                    this.deepmodel.bind('change:user.*', userSpy);
+                    this.deepmodel.set('user.last', 'Dollar');
+                    expect(userSpy.callCount).to.eql(1);
+                });
                 it('should submit an authentication token on every request ' +
                    'when the cookie is set.', function() {
                        this.server.respondWith(
