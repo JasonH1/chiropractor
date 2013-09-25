@@ -1,0 +1,14 @@
+<div class="control-group" id="container-{{ id }}">
+    <label class="control-label" for="{{ id }}">{{ label }}</label>
+    <div class="controls">
+        <select id="{{ id }}" name="{{ name }}">
+            {{#if blank}}
+                <option value="">{{ blank }}</option>
+            {{/if}}
+            {{#each options}} 
+                <option value="{{ value }}"{{#ifequal value ../value}} selected="selected"{{/ifequal}}>{{ label }}</option>
+            {{/each}}
+        </select>
+        <span class="help-inline">{{ help }}</span>
+    </div>
+</div>
