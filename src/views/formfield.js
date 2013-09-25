@@ -25,7 +25,6 @@ define(function(require) {
             this.config = options.context;
             this.field = options.field;
         },
-
         inputChanged: function() {
             var val = this.$('[name=' + this.field + ']').val();
             this.model.set(this.field, val, {validate: true});
@@ -90,7 +89,6 @@ define(function(require) {
             value: model.get(fieldName) || '',
             help: ''
         });
-
         return viewHelper.call(this, FormField, {
             field: fieldName,
             model: model,
