@@ -22,7 +22,6 @@ define(function(require) {
         Router: Routers.Base,
         SubRoute: SubRoute,
         View: Views.Base,
-        FormField: Views.FormField,
         Views: Views
     };
 });
