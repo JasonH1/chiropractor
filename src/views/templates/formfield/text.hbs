@@ -1,7 +1,7 @@
 <div class="control-group" id="container-{{ id }}">
     <label class="control-label {{ labelclass }}" for="{{ id }}">{{ label }}</label>
     <div class="controls">
-        <input type="text" required placeholder="{{ placeholder }}" id="{{ id }}" name="{{ name }}" value="{{ value }}" class="{{ class }}" />
+        <input type="text" {{ required }} placeholder="{{ placeholder }}" id="{{ id }}" name="{{ name }}" value="{{ value }}" class="{{ class }}" />
         <span class="description">{{ description }}</span>
         <span class="help-inline">{{ help }}</span>
     </div>
