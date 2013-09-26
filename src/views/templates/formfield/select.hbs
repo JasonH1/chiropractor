@@ -8,7 +8,8 @@
             {{#each options}}
                 <option value="{{ value }}"{{#ifequal value ../value}} selected="selected"{{/ifequal}}>{{ label }}</option>
             {{/each}}
-        </select>        <span class="description">{{ description }}</span>
+        </select>        
+        <span class="description">{{ description }}</span>
         <span class="help-inline">{{ help }}</span>
     </div>
 </div>
