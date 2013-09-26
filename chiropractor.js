@@ -1732,7 +1732,11 @@ define('chiropractor/views/base',['require','underscore','jquery','backbone','ha
             _.defaults(context, this._context);
 
             if (template) {
-                this.$el.html(template(context));
+                try {
+                  this.$el.html(template(context));  
+                } catch (err) {
+                  throw new Error('Could not evaluate context of template.' + err.message);
+                }
             }
 
             _(this._childViews).each(function(view) {
