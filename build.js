@@ -21,7 +21,8 @@ require.config({
         'jquery':               'bower_components/jquery/jquery',
         'jquery.cookie':        'bower_components/jquery.cookie/jquery.cookie',
         'backbone.subroute':    'bower_components/backbone.subroute/backbone.subroute',
-        'backbone.validation':  'bower_components/backbone-validation/dist/backbone-validation-amd'
+        'backbone.validation':  'bower_components/backbone-validation/dist/backbone-validation-amd',
+        'backbone.deep.model': 'bower_components/backbone-deep-model/src/deep-model'
     },
 
     skipModuleInsertion: false,
@@ -40,6 +41,10 @@ require.config({
         },
         'underscore': {
             exports: '_'
+        },
+        'backbone.deep.model': {
+            deps: ['backbone', 'underscore'],
+            exports: 'Backbone.DeepModel'
         },
         json3: {
             exports: 'JSON'

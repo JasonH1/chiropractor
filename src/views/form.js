@@ -4,6 +4,7 @@ define(function(require) {
 
     var _ = require('underscore'),
         $ = require('jquery'),
+        Backbone = require('backbone'),
         Base = require('./base');
 
     return Base.extend({

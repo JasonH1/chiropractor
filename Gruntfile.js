@@ -58,7 +58,7 @@ module.exports = function(grunt) {
                     name: 'chiropractor',
                     mainConfigFile: 'build.js',
                     optimize: "none",
-                    exclude: ['jquery', 'underscore', 'json3', 'handlebars', 'jquery.cookie', 'hbs', 'backbone', 'backbone.subroute', 'backbone.validation'],
+                    exclude: ['jquery', 'underscore', 'json3', 'handlebars', 'jquery.cookie', 'hbs', 'backbone', 'backbone.subroute', 'backbone.validation', 'backbone.deep.model'],
                     done: function(done, output) {
                         var duplicates = require('rjs-build-analysis').duplicates(output);
 
@@ -96,15 +96,41 @@ module.exports = function(grunt) {
                 // options to use with '$ git describe'
                 gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
             }
+        },
+        jshint: {
+            all:['src/**/*.js'],
+            options: {
+                bitwise: true,
+                browser: true,
+                browser: true,
+                curly: true,
+                eqeqeq: true,
+                immed: true,
+                jquery: true,
+                latedef: true,
+                newcap: true,
+                noarg: true,
+                node: true,
+                nonew: true,
+                plusplus: true,
+                regexp: true,
+                trailing: true,
+                undef: true,
+                globals: {
+                    define: true,
+                    require: true
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-bump');
 
     // Default task(s).
-    grunt.registerTask('default', ['requirejs', 'uglify']);
+    grunt.registerTask('default', ['jshint', 'requirejs', 'uglify']);
     grunt.renameTask('bump', 'nonBuildBump');
-    grunt.registerTask('bump', ['requirejs', 'uglify', 'nonBuildBump']);
+    grunt.registerTask('bump', ['nonBuildBump::bump-only', 'default', 'nonBuildBump::commit-only']);
 };

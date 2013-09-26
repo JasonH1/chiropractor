@@ -1,4 +1,4 @@
-/*global define*/
+/*global define,alert*/
 define(function(require, exports, module) {
     var window = require('chiropractor/browser').window,
         console = window.console;
@@ -35,6 +35,6 @@ define(function(require, exports, module) {
     if (module.config().enabled) {
         window.onerror = function(message, url, linenumber) {
             alert("JavaScript error: " + message + " on line " + linenumber + " for " + url);
-        }
+        };
     }
 });

@@ -85,11 +85,12 @@ define('chiropractor/views/base',['require','underscore','jquery','backbone','ha
 });
 
 /*global define*/
-define('chiropractor/views/form',['require','underscore','jquery','./base'],function(require) {
+define('chiropractor/views/form',['require','underscore','jquery','backbone','./base'],function(require) {
     
 
     var _ = require('underscore'),
         $ = require('jquery'),
+        Backbone = require('backbone'),
         Base = require('./base');
 
     return Base.extend({
@@ -738,22 +739,23 @@ define('chiropractor/models/auth',['require','backbone','jquery','underscore','j
 });
 
 /*global define,setTimeout,clearTimeout*/
-define('chiropractor/models',['require','backbone','underscore','./models/auth','backbone.validation'],function(require) {
+define('chiropractor/models',['require','backbone','underscore','./models/auth','backbone.deep.model','backbone.validation'],function(require) {
     
 
     var Backbone = require('backbone'),
         _ = require('underscore'),
         auth = require('./models/auth'),
+        BackboneDeepModel = require('backbone.deep.model'),
         Validation = require('backbone.validation'),
         Base;
 
 
-    Base = Backbone.Model.extend({
+    Base = BackboneDeepModel.DeepModel.extend({
         sync: function(method, model, options) {
             // Setup the authentication handlers for the BaseModel
             auth.sync.call(this, method, model, options);
 
-            return Backbone.Model.prototype.sync.call(
+            return BackboneDeepModel.DeepModel.prototype.sync.call(
                 this, method, model, options
             );
         },
@@ -805,7 +807,7 @@ define('chiropractor/models',['require','backbone','underscore','./models/auth',
                 return false;
             }
 
-            return Backbone.Model.prototype.set.apply(this, arguments);
+            return BackboneDeepModel.DeepModel.prototype.set.apply(this, arguments);
         }
     });
 
@@ -852,16 +854,17 @@ define('chiropractor/routers',['require','backbone'],function(require) {
     
 
     define('chiropractor/browser',['require'],function(require) {
-        var ieVersion = function() {
+        var ieVersion = (function() {
             var rv = -1; // Return value assumes failure.
-            if (window.navigator.appName == 'Microsoft Internet Explorer') {
+            if (window.navigator.appName === 'Microsoft Internet Explorer') {
                 var ua = window.navigator.userAgent;
-                var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
-                if (re.exec(ua) != null)
+                var re = new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})");
+                if (re.exec(ua) !== null) {
                     rv = parseFloat(RegExp.$1);
+                }
             }
             return rv;
-        }();
+        }());
         return {
             isOldIE: ieVersion !== -1 && ieVersion < 9,
             window: window,
@@ -871,7 +874,7 @@ define('chiropractor/routers',['require','backbone'],function(require) {
     });
 }(this));
 
-/*global define*/
+/*global define,alert*/
 define('chiropractor/debug',['require','exports','module','chiropractor/browser'],function(require, exports, module) {
     var window = require('chiropractor/browser').window,
         console = window.console;
@@ -908,7 +911,7 @@ define('chiropractor/debug',['require','exports','module','chiropractor/browser'
     if (module.config().enabled) {
         window.onerror = function(message, url, linenumber) {
             alert("JavaScript error: " + message + " on line " + linenumber + " for " + url);
-        }
+        };
     }
 });
 

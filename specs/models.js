@@ -27,6 +27,25 @@ define(function(require) {
 
                 this.model = new Models.Base();
                 this.model.url = this.path;
+
+                this.deepmodel = new Models.Base({
+                    id: 123,
+                    user: {
+                        type: 'Spy',
+                        name: {
+                            first: 'Sterling',
+                            last: 'Archer'
+                        },
+                        attributes: {
+                            yellow: 'Yellow',
+                            blue: 'Blue',
+                            red: 'Red',
+                            green: 'Green',
+                            orange: 'Orange'
+                        }
+                    }
+                });
+
             });
 
             afterEach(function() {
@@ -35,6 +54,22 @@ define(function(require) {
             });
 
             describe('Base', function() {
+                it('should be able to get deep attributes', function () {
+                    expect(this.deepmodel.get('user.name.first')).to.be.a('string');
+                    expect(this.deepmodel.get('user.name.first')).to.eql('Sterling');
+
+                });
+                it('should be able to get deep array of attributes', function () {
+                    expect(this.deepmodel.get('user.attributes')).to.be.an('object');
+                    expect(this.deepmodel.get('user.attributes')).to.have.property('yellow');
+                    expect(this.deepmodel.get('user.attributes')).to.have.property('orange');
+                    expect(this.deepmodel.get('user.attributes')).to.have.property('red');
+                });
+                it('should be able to set deep attributes', function () {
+                    this.deepmodel.set('user.name.first', "Dollar");
+                    expect(this.deepmodel.get('user.name.first')).to.be.a('string');
+                    expect(this.deepmodel.get('user.name.first')).to.eql('Dollar');
+                });
                 it('should submit an authentication token on every request ' +
                    'when the cookie is set.', function() {
                        this.server.respondWith(
