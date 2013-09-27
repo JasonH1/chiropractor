@@ -45,6 +45,20 @@ define(function(require) {
                         }
                     }
                 });
+                var relation = {
+                    'health-plan-health-plan-year': {
+                                    'name': '2012'
+                    },
+                    'company-health-plan': {
+                                    'name': 'WiserTogether'
+                    },
+                    'health-plan-health-workflow-status': {
+                                    'name': 'Draft'
+                    }
+
+                };
+
+                this.deepmodel.set('relations', relation);
 
             });
 
@@ -58,6 +72,9 @@ define(function(require) {
                     expect(this.deepmodel.get('user.name.first')).to.be.a('string');
                     expect(this.deepmodel.get('user.name.first')).to.eql('Sterling');
 
+                });
+                if ('should get deep attributes which are set after initialize', function() {
+                    expect(this.deepmodel.get('relations.health-plan-health-plan-year.name')).to.eql('2012');
                 });
                 it('should be able to get deep array of attributes', function () {
                     expect(this.deepmodel.get('user.attributes')).to.be.an('object');
