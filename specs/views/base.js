@@ -40,6 +40,23 @@ define(function(require) {
                    expect(spy.callCount).to.equal(1);
                });
 
+            it('should call the remove method only once when removing ' +
+               'the backbone view directly.', function() {
+                var view = new (View.extend({
+                    remove: function() {
+                        this.trigger('remove');
+                        View.prototype.remove.apply(this, arguments);
+                    }
+                }))(),
+                spy = this.sandbox.spy();
+
+                view.on('remove', spy);
+                view.remove();
+                view.off('remove', spy);
+
+                expect(spy.callCount).to.equal(1);
+            });
+
             it('should call the remove method when an ' +
                'ancestor of the element has its content replaced.', function() {
                    var content = $('<div><div class="subcontent"></div></div>'),

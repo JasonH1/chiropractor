@@ -17,7 +17,15 @@ define(function(require) {
         $.event.special.remove = {
             remove: function(e) {
                 if (e.handler) {
-                    e.handler.call(this, new $.Event('remove', {target: this}));
+                    var $el = $(this);
+                    // Since this event gets fired on calling $el.off('remove')
+                    // as well as when the $el.remove() gets called, we need to
+                    // allow the Backbone View to unregister this without
+                    // firing it.
+                    if(!$el.hasClass('removedEventFired')) {
+                        $el.addClass('removedEventFired');
+                        e.handler.call(this, new $.Event('remove', {target: this}));
+                    }
                 }
             }
         };
@@ -73,6 +81,7 @@ define(function(require) {
         },
 
         remove: function() {
+            this.$el.addClass('removedEventFired');
             this.$el.off('remove', this.remove);
             _(this._childViews).each(function(view) {
                 view.remove();
