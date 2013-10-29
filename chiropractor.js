@@ -1692,7 +1692,15 @@ define('chiropractor/views/base',['require','underscore','jquery','backbone','ha
         $.event.special.remove = {
             remove: function(e) {
                 if (e.handler) {
-                    e.handler.call(this, new $.Event('remove', {target: this}));
+                    var $el = $(this);
+                    // Since this event gets fired on calling $el.off('remove')
+                    // as well as when the $el.remove() gets called, we need to
+                    // allow the Backbone View to unregister this without
+                    // firing it.
+                    if(!$el.hasClass('removedEventFired')) {
+                        $el.addClass('removedEventFired');
+                        e.handler.call(this, new $.Event('remove', {target: this}));
+                    }
                 }
             }
         };
@@ -1748,6 +1756,7 @@ define('chiropractor/views/base',['require','underscore','jquery','backbone','ha
         },
 
         remove: function() {
+            this.$el.addClass('removedEventFired');
             this.$el.off('remove', this.remove);
             _(this._childViews).each(function(view) {
                 view.remove();
@@ -2060,7 +2069,7 @@ function program4(depth0,data) {
   stack1 = depth0.options;
   stack1 = helpers.each.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(program3, data, depth0)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n        </select>        \r\n        <span class=\"description\">";
+  buffer += "\r\n        </select>\r\n        <span class=\"description\">";
   foundHelper = helpers.description;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.description; stack1 = typeof stack1 === functionType ? stack1() : stack1; }

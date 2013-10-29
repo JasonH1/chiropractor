@@ -58,7 +58,8 @@ require.config({
 
     deps: [
         'jquery',
-        'hbs'
+        'hbs',
+        'underscore'
     ],
 
     enforceDefine: true
