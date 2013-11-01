@@ -1,4 +1,4 @@
-Example 1: This shows a table with dynamic fields
+Example 2: This shows a table with a custom row
 <table class="general-table table table-hover">
   <thead>
      <tr>
@@ -9,7 +9,7 @@ Example 1: This shows a table with dynamic fields
     </thead>
     <tbody id="rows">
       {{#each collection.models }}
-        {{ row "row" this fields=../fields }}
+        {{ row "customrow" this fields=../fields }}
       {{/each}}
    </tbody>
 </table>
