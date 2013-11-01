@@ -4,4 +4,5 @@ define(function(require) {
 
     require('./hbs/view');
     require('./hbs/ifequal');
+    require('./hbs/log');
 });

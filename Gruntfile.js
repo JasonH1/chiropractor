@@ -33,7 +33,7 @@ module.exports = function(grunt) {
             withdeps: {
                 options: {
                     baseUrl: './',
-                    out: 'chiropractor.js',
+                    out: '../assisi/src/components/chiropractor/chiropractor.js',
                     name: 'chiropractor',
                     mainConfigFile: 'build.js',
                     optimize: "none",
@@ -121,6 +121,15 @@ module.exports = function(grunt) {
                     require: true
                 }
             }
+        },
+         devserver: {
+          options: {
+            'type': 'http',
+            'port': 8888,
+            //'base': '../',
+            'cache': 'no-cache',
+            'async': true
+          }
         }
     });
 
@@ -128,6 +137,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-bump');
+    grunt.loadNpmTasks('grunt-devserver');
 
     // Default task(s).
     grunt.registerTask('default', ['jshint', 'requirejs', 'uglify']);

@@ -155,82 +155,15 @@ define('chiropractor/views/form',['require','underscore','jquery','backbone','./
     });
 });
 
-/*global define*/
-define('chiropractor/hbs/view',['require','underscore','backbone','handlebars'],function(require) {
-    
-
-    var _ = require('underscore'),
-        Backbone = require('backbone'),
-        Handlebars = require('handlebars'),
-        view;
-
-    view = function() {
-        // template helper in the form of:
-        //
-        //      {{ view "path/to/require/module[|ViewName]" [viewOptions] [context] [viewOption1=val viewOption2=val]}}
-        var View, view, options, requirePath,
-            viewName, attrs, requireBits, placeholder,
-            context = {};
-
-        options = arguments[arguments.length - 1];
-        attrs = arguments[1] || {};
-        _.defaults(attrs, options.hash || {});
-
-        if (arguments.length === 4) {
-            context = arguments[2];
-        }
-        _.defaults(this, context);
-
-        if (typeof(arguments[0]) === 'string') {
-            requireBits = arguments[0].split('|');
-            requirePath = requireBits[0];
-            viewName = requireBits[1];
-
-            View = require(requirePath);
-            if (typeof(viewName) === 'string') {
-                View = View[viewName];
-            }
-        }
-        else {
-            View = arguments[0];
-        }
-
-        if (options.fn) {
-            View = View.extend({
-                template: options.fn
-            });
-        }
-
-        view = new View(attrs).render();
-
-        placeholder = this.declaringView._addChild(view);
-
-        // Return a placeholder that the Chiropractor.View can replace with
-        // the child view appended above.
-        // If this is called as a block hbs helper, then we do not need to
-        // use safe string, while as a hbs statement it needs to be declared
-        // safe.
-        if (options.fn) {
-            return placeholder;
-        }
-        else {
-            return new Handlebars.SafeString(placeholder);
-        }
-    };
-
-    Handlebars.registerHelper('view', view);
-
-    return view;
-});
-
 /* START_TEMPLATE */
 define('hbs!chiropractor/views/templates/formfield/text',['hbs','handlebars'], function( hbs, Handlebars ){ 
 var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   helpers = helpers || Handlebars.helpers;
-  var buffer = "", stack1, foundHelper, functionType="function", escapeExpression=this.escapeExpression;
+  var buffer = "", stack1, foundHelper, escapeExpression=this.escapeExpression, functionType="function";
 
 
-  buffer += "<div class=\"control-group\" id=\"container-";
+  stack1 = helpers.log.call(depth0, depth0, {hash:{}});
+  buffer += escapeExpression(stack1) + "\r\n<div class=\"control-group\" id=\"container-";
   foundHelper = helpers.id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -323,6 +256,204 @@ return t;
 });
 /* END_TEMPLATE */
 ;
+/*global define*/
+define('chiropractor/views/field',['require','jquery','underscore','handlebars','hbs!./templates/formfield/text','hbs!./templates/formfield/textarea'],function(require) {
+    
+
+    var $ = require('jquery'),
+        _ = require('underscore'),
+        Handlebars = require('handlebars'),
+        fieldTemplates = {},
+        text = require('hbs!./templates/formfield/text'),
+        textarea =  require('hbs!./templates/formfield/textarea');
+
+        fieldTemplates = {
+            'text': text,
+            'textarea': textarea
+        };
+
+       Handlebars.registerHelper('field', function(type, model, fieldName) {
+            // template helper in the form of:
+            //
+            //      {{ field 'text' model 'fieldname' [attrName="attrValue"]*}}
+            var field = fieldTemplates[type],
+                options = arguments[arguments.length - 1],
+                opts = options.hash || {},
+                id = '',
+                value = '';
+
+            if (!field) {
+                throw new Error('Unregistered field template: ' + type);
+            }
+
+            if (model) {
+                id = model.fieldId(fieldName);
+                value = model.get(fieldName);
+            }
+            _.defaults(opts, {
+                id: id,
+                label: fieldName,
+                name: fieldName,
+                options: [],
+                blank: false,
+                value: value,
+                help: ''
+            });
+            return new Handlebars.SafeString(field({ model: model, options: opts }));
+        });
+
+    return {
+        Templates: fieldTemplates,
+        addTemplate: function(name,template) {
+            fieldTemplates[name] = template;
+        }
+    };
+});
+
+/* START_TEMPLATE */
+define('hbs!chiropractor/views/templates/row/row',['hbs','handlebars'], function( hbs, Handlebars ){ 
+var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  helpers = helpers || Handlebars.helpers;
+  var buffer = "", stack1, foundHelper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function", self=this;
+
+function program1(depth0,data,depth1) {
+  
+  var buffer = "", stack1, stack2, stack3, foundHelper;
+  buffer += "\r\n    <td>";
+  stack1 = depth0.field;
+  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.type;
+  stack2 = {};
+  stack3 = depth1.model;
+  stack2['model'] = stack3;
+  stack2['field'] = depth0;
+  foundHelper = helpers.field;
+  stack1 = foundHelper ? foundHelper.call(depth0, stack1, {hash:stack2}) : helperMissing.call(depth0, "field", stack1, {hash:stack2});
+  buffer += escapeExpression(stack1) + "</td>\r\n  ";
+  return buffer;}
+
+  buffer += "<tr class=\"";
+  foundHelper = helpers.rowclass;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.rowclass; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "\">\r\n  ";
+  stack1 = depth0.options;
+  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.fields;
+  stack1 = helpers.each.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(program1, data, depth0)});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n</tr>";
+  return buffer;});
+Handlebars.registerPartial('chiropractor_views_templates_row_row', t);
+return t;
+});
+/* END_TEMPLATE */
+;
+/*global define*/
+define('chiropractor/views/row',['require','jquery','underscore','handlebars','hbs!./templates/row/row'],function(require) {
+    
+
+    var $ = require('jquery'),
+        _ = require('underscore'),
+        Handlebars = require('handlebars'),
+        rowTemplates = {},
+        row = require('hbs!./templates/row/row');
+
+        rowTemplates = {
+            'row': row
+        };
+
+       Handlebars.registerHelper('row', function(type, model, fieldName) {
+            // template helper in the form of:
+            //
+            //      {{ field 'text' model 'fieldname' [attrName="attrValue"]*}}
+            var current = rowTemplates[type],
+                options = arguments[arguments.length - 1],
+                opts = options.hash || {},
+                id = '',
+                value = '';
+
+            if (!current) {
+                throw new Error('Unregistered field template: ' + type);
+            }
+
+            return new Handlebars.SafeString(current({ model: model, options: opts }));
+        });
+
+    return {
+        Templates: rowTemplates,
+        addTemplate: function(name,template) {
+            rowTemplates[name] = template;
+        }
+    };
+});
+
+/*global define*/
+define('chiropractor/hbs/view',['require','underscore','backbone','handlebars'],function(require) {
+    
+
+    var _ = require('underscore'),
+        Backbone = require('backbone'),
+        Handlebars = require('handlebars'),
+        view;
+
+    view = function() {
+        // template helper in the form of:
+        //
+        //      {{ view "path/to/require/module[|ViewName]" [viewOptions] [context] [viewOption1=val viewOption2=val]}}
+        var View, view, options, requirePath,
+            viewName, attrs, requireBits, placeholder,
+            context = {};
+
+        options = arguments[arguments.length - 1];
+        attrs = arguments[1] || {};
+        _.defaults(attrs, options.hash || {});
+
+        if (arguments.length === 4) {
+            context = arguments[2];
+        }
+        _.defaults(this, context);
+
+        if (typeof(arguments[0]) === 'string') {
+            requireBits = arguments[0].split('|');
+            requirePath = requireBits[0];
+            viewName = requireBits[1];
+
+            View = require(requirePath);
+            if (typeof(viewName) === 'string') {
+                View = View[viewName];
+            }
+        }
+        else {
+            View = arguments[0];
+        }
+
+        if (options.fn) {
+            View = View.extend({
+                template: options.fn
+            });
+        }
+
+        view = new View(attrs).render();
+
+        placeholder = this.declaringView._addChild(view);
+
+        // Return a placeholder that the Chiropractor.View can replace with
+        // the child view appended above.
+        // If this is called as a block hbs helper, then we do not need to
+        // use safe string, while as a hbs statement it needs to be declared
+        // safe.
+        if (options.fn) {
+            return placeholder;
+        }
+        else {
+            return new Handlebars.SafeString(placeholder);
+        }
+    };
+
+    Handlebars.registerHelper('view', view);
+
+    return view;
+});
+
 /* START_TEMPLATE */
 define('hbs!chiropractor/views/templates/formfield/select',['hbs','handlebars'], function( hbs, Handlebars ){ 
 var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -622,16 +753,20 @@ define('chiropractor/views/formfield',['require','jquery','underscore','handleba
 });
 
 /*global define*/
-define('chiropractor/views',['require','./views/base','./views/form','./views/formfield'],function(require) {
+define('chiropractor/views',['require','./views/base','./views/form','./views/field','./views/row','./views/formfield'],function(require) {
     
 
     var Base = require('./views/base'),
         Form = require('./views/form'),
+        Field = require('./views/field'),
+        Row = require('./views/row'),
         FormField = require('./views/formfield');
 
     return {
         Base: Base,
         Form: Form,
+        Row: Row,
+        Field: Field,
         FormField: FormField
     };
 });
@@ -982,7 +1117,7 @@ define('chiropractor/main',['require','backbone','backbone.subroute','./views','
 
     require('./debug');
     require('./hbs');
-
+    console.log('test');
     return {
         Collection: Collections.Base,
         Collections: Collections,

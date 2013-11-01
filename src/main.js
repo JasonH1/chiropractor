@@ -11,7 +11,7 @@ define(function(require) {
 
     require('./debug');
     require('./hbs');
-
+    console.log('test');
     return {
         Collection: Collections.Base,
         Collections: Collections,

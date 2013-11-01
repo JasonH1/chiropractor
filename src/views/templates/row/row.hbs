@@ -1,0 +1,5 @@
+<tr class="{{ rowclass }}">
+  {{#each options.fields }}
+    <td>{{field this.fieldtype ../model field=this}}</td>
+  {{/each}}
+</tr>

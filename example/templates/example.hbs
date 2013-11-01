@@ -1,0 +1,15 @@
+Example 1: This shows a table with dynamic fields
+<table class="general-table table table-hover">
+  <thead>
+     <tr>
+      {{#each fields }}
+        <th>{{ name }}</th>
+      {{/each}}
+    </tr>
+    </thead>
+    <tbody id="rows">
+      {{#each collection.models }}
+        {{ row "row" this fields=../fields }}
+      {{/each}}
+   </tbody>
+</table>
