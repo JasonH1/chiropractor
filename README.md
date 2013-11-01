@@ -81,3 +81,16 @@ testing with auto-running tests on file changes you can run:
 
 	./node_modules/.bin/karma start --dev --browsers Chrome,PhantomJS
 
+Previewing
+-----
+
+You can preview example functionality of Chiropractor by first running:
+
+    grunt devserver
+    
+
+goto: http://localhost:8888
+
+Also you check out the /example folder for the source code of these examples
+in how to integrate Chiropractor into your project.
+    
