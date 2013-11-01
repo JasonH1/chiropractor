@@ -33,7 +33,7 @@ module.exports = function(grunt) {
             withdeps: {
                 options: {
                     baseUrl: './',
-                    out: '../assisi/src/components/chiropractor/chiropractor.js',
+                    out: 'chiropractor.js',
                     name: 'chiropractor',
                     mainConfigFile: 'build.js',
                     optimize: "none",
