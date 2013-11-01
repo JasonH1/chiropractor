@@ -1174,7 +1174,7 @@ define('chiropractor/main',['require','backbone','backbone.subroute','./views','
 
     require('./debug');
     require('./hbs');
-    console.log('test');
+
     return {
         Collection: Collections.Base,
         Collections: Collections,

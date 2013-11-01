@@ -1829,6 +1829,180 @@ define('chiropractor/views/form',['require','underscore','jquery','backbone','./
     });
 });
 
+/* START_TEMPLATE */
+define('hbs!chiropractor/views/templates/fields/checkbox',['hbs','handlebars'], function( hbs, Handlebars ){ 
+var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  helpers = helpers || Handlebars.helpers;
+  var buffer = "", stack1, foundHelper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<input type=\"checkbox\" id=\"";
+  foundHelper = helpers.id;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "\" name=\"";
+  foundHelper = helpers.name;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "\" value=\"";
+  foundHelper = helpers.value;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.value; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "\" />";
+  return buffer;});
+Handlebars.registerPartial('chiropractor_views_templates_fields_checkbox', t);
+return t;
+});
+/* END_TEMPLATE */
+;
+/* START_TEMPLATE */
+define('hbs!chiropractor/views/templates/fields/label',['hbs','handlebars'], function( hbs, Handlebars ){ 
+var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  helpers = helpers || Handlebars.helpers;
+  var stack1, foundHelper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  foundHelper = helpers.value;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.value; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  return escapeExpression(stack1);});
+Handlebars.registerPartial('chiropractor_views_templates_fields_label', t);
+return t;
+});
+/* END_TEMPLATE */
+;
+/*global define*/
+define('chiropractor/views/field',['require','jquery','underscore','handlebars','hbs!./templates/fields/checkbox','hbs!./templates/fields/label'],function(require) {
+    
+
+    var $ = require('jquery'),
+        _ = require('underscore'),
+        Handlebars = require('handlebars'),
+        fieldTemplates = {},
+        checkbox = require('hbs!./templates/fields/checkbox'),
+        label = require('hbs!./templates/fields/label');
+
+        fieldTemplates = {
+            'default': label,
+            'checkbox': checkbox
+        };
+
+       Handlebars.registerHelper('field', function(type, model, fieldName) {
+            // template helper in the form of:
+            //
+            //      {{ field 'text' model 'fieldname' [attrName="attrValue"]*}}
+            var template = fieldTemplates[type],
+                options = arguments[arguments.length - 1],
+                opts = options.hash || {},
+                field = opts.field,
+                id = '',
+                value = '';
+
+            if (!template) {
+               template = fieldTemplates.default;
+            }
+
+            if (model) {
+                id = model.fieldId(fieldName);
+                //console.log(model);
+                value = model.get(field.id);
+            }
+
+            _.defaults(opts, {
+                id: id,
+                label: fieldName,
+                name: fieldName,
+                options: [],
+                blank: false,
+                value: value,
+                help: '',
+                model: model
+            });
+            return new Handlebars.SafeString(template(opts));
+        });
+
+    return {
+        Templates: fieldTemplates,
+        addTemplate: function(name,template) {
+            fieldTemplates[name] = template;
+        }
+    };
+});
+
+/* START_TEMPLATE */
+define('hbs!chiropractor/views/templates/row/row',['hbs','handlebars'], function( hbs, Handlebars ){ 
+var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  helpers = helpers || Handlebars.helpers;
+  var buffer = "", stack1, foundHelper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function", self=this;
+
+function program1(depth0,data,depth1) {
+  
+  var buffer = "", stack1, stack2, stack3, foundHelper;
+  buffer += "\r\n    <td>";
+  stack1 = depth1.model;
+  stack2 = depth0.fieldtype;
+  stack3 = {};
+  stack3['field'] = depth0;
+  foundHelper = helpers.field;
+  stack1 = foundHelper ? foundHelper.call(depth0, stack2, stack1, {hash:stack3}) : helperMissing.call(depth0, "field", stack2, stack1, {hash:stack3});
+  buffer += escapeExpression(stack1) + "</td>\r\n  ";
+  return buffer;}
+
+  buffer += "<tr class=\"";
+  foundHelper = helpers.rowclass;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.rowclass; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "\">\r\n  ";
+  stack1 = depth0.options;
+  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.fields;
+  stack1 = helpers.each.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(program1, data, depth0)});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n</tr>";
+  return buffer;});
+Handlebars.registerPartial('chiropractor_views_templates_row_row', t);
+return t;
+});
+/* END_TEMPLATE */
+;
+/*global define*/
+define('chiropractor/views/row',['require','jquery','underscore','handlebars','hbs!./templates/row/row'],function(require) {
+    
+
+    var $ = require('jquery'),
+        _ = require('underscore'),
+        Handlebars = require('handlebars'),
+        rowTemplates = {},
+        row = require('hbs!./templates/row/row');
+
+        rowTemplates = {
+            'row': row
+        };
+
+       Handlebars.registerHelper('row', function(type, model, fieldName) {
+            // template helper in the form of:
+            //
+            //      {{ field 'text' model 'fieldname' [attrName="attrValue"]*}}
+            var current = rowTemplates[type],
+                options = arguments[arguments.length - 1],
+                opts = options.hash || {},
+                id = '',
+                value = '';
+
+            if (!current) {
+                throw new Error('Unregistered field template: ' + type);
+            }
+            //console.log(opt);
+            return new Handlebars.SafeString(current({ model: model, options: opts }));
+        });
+
+    return {
+        Templates: rowTemplates,
+        addTemplate: function(name,template) {
+            rowTemplates[name] = template;
+        }
+    };
+});
+
 /*global define*/
 define('chiropractor/hbs/view',['require','underscore','backbone','handlebars'],function(require) {
     
@@ -2296,16 +2470,20 @@ define('chiropractor/views/formfield',['require','jquery','underscore','handleba
 });
 
 /*global define*/
-define('chiropractor/views',['require','./views/base','./views/form','./views/formfield'],function(require) {
+define('chiropractor/views',['require','./views/base','./views/form','./views/field','./views/row','./views/formfield'],function(require) {
     
 
     var Base = require('./views/base'),
         Form = require('./views/form'),
+        Field = require('./views/field'),
+        Row = require('./views/row'),
         FormField = require('./views/formfield');
 
     return {
         Base: Base,
         Form: Form,
+        Row: Row,
+        Field: Field,
         FormField: FormField
     };
 });
@@ -3694,11 +3872,25 @@ define('chiropractor/hbs/ifequal',['require','handlebars'],function(require) {
 });
 
 /*global define*/
-define('chiropractor/hbs',['require','./hbs/view','./hbs/ifequal'],function(require) {
+define('chiropractor/hbs/log',['require','handlebars'],function(require) {
+    
+
+    var Handlebars = require('handlebars');
+
+    function log(context, options) {
+        console.log(context);
+    }
+    Handlebars.registerHelper('log', log);
+
+    return log;
+});
+/*global define*/
+define('chiropractor/hbs',['require','./hbs/view','./hbs/ifequal','./hbs/log'],function(require) {
     
 
     require('./hbs/view');
     require('./hbs/ifequal');
+    require('./hbs/log');
 });
 
 /*global define*/
@@ -3714,7 +3906,7 @@ define('chiropractor/main',['require','backbone','backbone.subroute','./views','
 
     require('./debug');
     require('./hbs');
-    console.log('test');
+
     return {
         Collection: Collections.Base,
         Collections: Collections,
