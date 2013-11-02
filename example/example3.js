@@ -10,11 +10,14 @@ define(function (require) {
         Routers = require('src/routers'),
         Handlebars = require('handlebars'),
         customfield = require('hbs!./../example/templates/custom_field'),
+        checkbox = require('hbs!./../example/templates/checkbox'),
         template = require('hbs!./../example/templates/example3'),
         data = require('example/data');
 
     var field = Views.Field;
     field.addTemplate('customfield', customfield);
+    field.addTemplate('checkbox', checkbox);
+
     var fields = [{
         id: '',
         name: 'disable?',

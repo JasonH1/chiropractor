@@ -35,8 +35,7 @@ define(function (require) {
     }));
     var fields = [{
         id: '',
-        name: 'disable?',
-        fieldtype: 'checkbox'
+        name: 'disable?'
     }, {
         id: 'name',
         name: 'Name'

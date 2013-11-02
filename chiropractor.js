@@ -1830,32 +1830,6 @@ define('chiropractor/views/form',['require','underscore','jquery','backbone','./
 });
 
 /* START_TEMPLATE */
-define('hbs!chiropractor/views/templates/fields/checkbox',['hbs','handlebars'], function( hbs, Handlebars ){ 
-var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  helpers = helpers || Handlebars.helpers;
-  var buffer = "", stack1, foundHelper, functionType="function", escapeExpression=this.escapeExpression;
-
-
-  buffer += "<input type=\"checkbox\" id=\"";
-  foundHelper = helpers.id;
-  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "\" name=\"";
-  foundHelper = helpers.name;
-  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "\" value=\"";
-  foundHelper = helpers.value;
-  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.value; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "\" />";
-  return buffer;});
-Handlebars.registerPartial('chiropractor_views_templates_fields_checkbox', t);
-return t;
-});
-/* END_TEMPLATE */
-;
-/* START_TEMPLATE */
 define('hbs!chiropractor/views/templates/fields/label',['hbs','handlebars'], function( hbs, Handlebars ){ 
 var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   helpers = helpers || Handlebars.helpers;
@@ -1872,19 +1846,17 @@ return t;
 /* END_TEMPLATE */
 ;
 /*global define*/
-define('chiropractor/views/field',['require','jquery','underscore','handlebars','hbs!./templates/fields/checkbox','hbs!./templates/fields/label'],function(require) {
+define('chiropractor/views/field',['require','jquery','underscore','handlebars','hbs!./templates/fields/label'],function(require) {
     
 
     var $ = require('jquery'),
         _ = require('underscore'),
         Handlebars = require('handlebars'),
         fieldTemplates = {},
-        checkbox = require('hbs!./templates/fields/checkbox'),
         label = require('hbs!./templates/fields/label');
 
         fieldTemplates = {
-            'default': label,
-            'checkbox': checkbox
+            'default': label
         };
 
        Handlebars.registerHelper('field', function(type, model, fieldName) {

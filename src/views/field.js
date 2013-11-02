@@ -6,12 +6,10 @@ define(function(require) {
         _ = require('underscore'),
         Handlebars = require('handlebars'),
         fieldTemplates = {},
-        checkbox = require('hbs!./templates/fields/checkbox'),
         label = require('hbs!./templates/fields/label');
 
         fieldTemplates = {
-            'default': label,
-            'checkbox': checkbox
+            'default': label
         };
 
        Handlebars.registerHelper('field', function(type, model, fieldName) {
