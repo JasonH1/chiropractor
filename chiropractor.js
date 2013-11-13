@@ -1871,7 +1871,7 @@ define('chiropractor/views/field',['require','jquery','underscore','handlebars',
                 value = '';
 
             if (!template) {
-               template = fieldTemplates.default;
+               template = fieldTemplates['default'];
             }
 
             if (model) {

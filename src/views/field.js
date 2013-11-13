@@ -24,7 +24,7 @@ define(function(require) {
                 value = '';
 
             if (!template) {
-               template = fieldTemplates.default;
+               template = fieldTemplates['default'];
             }
 
             if (model) {
