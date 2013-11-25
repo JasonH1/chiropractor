@@ -9,6 +9,7 @@ define(function(require) {
         Validation = require('backbone.validation'),
         Base;
 
+    require('underscore.mixin.deepextend');
 
     Base = BackboneDeepModel.DeepModel.extend({
         sync: function(method, model, options) {

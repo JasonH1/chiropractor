@@ -5,6 +5,8 @@ define(function(require) {
     var Backbone = require('backbone'),
         Base;
 
+    require('underscore.mixin.deepextend');
+
     Base = Backbone.Collection.extend({
     });
 

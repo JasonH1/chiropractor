@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var Backbone = require('backbone'),
+        _ = require('underscore'),
         SubRoute = require('backbone.subroute'),
         Views = require('./views'),
         Models = require('./models'),

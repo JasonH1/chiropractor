@@ -920,7 +920,7 @@ define('chiropractor/models/auth',['require','backbone','jquery','underscore','j
 });
 
 /*global define,setTimeout,clearTimeout*/
-define('chiropractor/models',['require','backbone','underscore','./models/auth','backbone.deep.model','backbone.validation'],function(require) {
+define('chiropractor/models',['require','backbone','underscore','./models/auth','backbone.deep.model','backbone.validation','underscore.mixin.deepextend'],function(require) {
     
 
     var Backbone = require('backbone'),
@@ -930,6 +930,7 @@ define('chiropractor/models',['require','backbone','underscore','./models/auth',
         Validation = require('backbone.validation'),
         Base;
 
+    require('underscore.mixin.deepextend');
 
     Base = BackboneDeepModel.DeepModel.extend({
         sync: function(method, model, options) {
@@ -1001,11 +1002,13 @@ define('chiropractor/models',['require','backbone','underscore','./models/auth',
 });
 
 /*global define*/
-define('chiropractor/collections',['require','backbone'],function(require) {
+define('chiropractor/collections',['require','backbone','underscore.mixin.deepextend'],function(require) {
     
 
     var Backbone = require('backbone'),
         Base;
+
+    require('underscore.mixin.deepextend');
 
     Base = Backbone.Collection.extend({
     });
@@ -1134,10 +1137,11 @@ define('chiropractor/hbs',['require','./hbs/view','./hbs/ifequal','./hbs/log'],f
 });
 
 /*global define*/
-define('chiropractor/main',['require','backbone','backbone.subroute','./views','./models','./collections','./routers','./debug','./hbs'],function(require) {
+define('chiropractor/main',['require','backbone','underscore','backbone.subroute','./views','./models','./collections','./routers','./debug','./hbs'],function(require) {
     
 
     var Backbone = require('backbone'),
+        _ = require('underscore'),
         SubRoute = require('backbone.subroute'),
         Views = require('./views'),
         Models = require('./models'),

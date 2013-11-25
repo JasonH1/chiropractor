@@ -2600,11 +2600,17 @@ define('chiropractor/models/auth',['require','backbone','jquery','underscore','j
  */
 //(function() {
   /*global define*/
-define('underscore.mixin.deepextend',['require','underscore'],function(require) {
+define('underscore.mixin.deepextend',['require','underscore','backbone'],function(require) {
     
 
   var _ = require('underscore'),
-  arrays, basicObjects, deepClone, deepExtend, deepExtendCouple, isBasicObject,
+    Backbone = require('backbone'),
+    arrays,
+    basicObjects,
+    deepClone,
+    deepExtend,
+    deepExtendCouple,
+    isBasicObject,
     __slice = [].slice;
 
   deepClone = function(obj) {
@@ -2634,7 +2640,9 @@ define('underscore.mixin.deepextend',['require','underscore'],function(require) 
   };
 
   isBasicObject = function(object) {
-    if (object == null) return false;
+    if (object === null) {
+      return false;
+    }
     return (object.prototype === {}.prototype || object.prototype === Object.prototype) && _.isObject(object) && !_.isArray(object) && !_.isFunction(object) && !_.isDate(object) && !_.isRegExp(object) && !_.isArguments(object);
   };
 
@@ -2652,7 +2660,7 @@ define('underscore.mixin.deepextend',['require','underscore'],function(require) 
 
   deepExtendCouple = function(destination, source, maxDepth) {
     var combine, recurse, sharedArrayKey, sharedArrayKeys, sharedObjectKey, sharedObjectKeys, _i, _j, _len, _len1;
-    if (maxDepth == null) {
+    if (maxDepth === null) {
       maxDepth = 20;
     }
     if (maxDepth <= 0) {
@@ -2661,17 +2669,19 @@ define('underscore.mixin.deepextend',['require','underscore'],function(require) 
     }
     sharedObjectKeys = _.intersection(basicObjects(destination), basicObjects(source));
     recurse = function(key) {
-      return source[key] = deepExtendCouple(destination[key], source[key], maxDepth - 1);
+      source[key] = deepExtendCouple(destination[key], source[key], maxDepth - 1);
+      return source[key];
     };
-    for (_i = 0, _len = sharedObjectKeys.length; _i < _len; _i++) {
+    for (_i = 0, _len = sharedObjectKeys.length; _i < _len; _i+=1) {
       sharedObjectKey = sharedObjectKeys[_i];
       recurse(sharedObjectKey);
     }
     sharedArrayKeys = _.intersection(arrays(destination), arrays(source));
     combine = function(key) {
-      return source[key] = _.union(destination[key], source[key]);
+      source[key] = _.union(destination[key], source[key]);
+      return source[key];
     };
-    for (_j = 0, _len1 = sharedArrayKeys.length; _j < _len1; _j++) {
+    for (_j = 0, _len1 = sharedArrayKeys.length; _j < _len1; _j+=1) {
       sharedArrayKey = sharedArrayKeys[_j];
       combine(sharedArrayKey);
     }
@@ -3672,7 +3682,7 @@ define('underscore.mixin.deepextend',['require','underscore'],function(require) 
   return Backbone.Validation;
 }));
 /*global define,setTimeout,clearTimeout*/
-define('chiropractor/models',['require','backbone','underscore','./models/auth','backbone.deep.model','backbone.validation'],function(require) {
+define('chiropractor/models',['require','backbone','underscore','./models/auth','backbone.deep.model','backbone.validation','underscore.mixin.deepextend'],function(require) {
     
 
     var Backbone = require('backbone'),
@@ -3682,6 +3692,7 @@ define('chiropractor/models',['require','backbone','underscore','./models/auth',
         Validation = require('backbone.validation'),
         Base;
 
+    require('underscore.mixin.deepextend');
 
     Base = BackboneDeepModel.DeepModel.extend({
         sync: function(method, model, options) {
@@ -3753,11 +3764,13 @@ define('chiropractor/models',['require','backbone','underscore','./models/auth',
 });
 
 /*global define*/
-define('chiropractor/collections',['require','backbone'],function(require) {
+define('chiropractor/collections',['require','backbone','underscore.mixin.deepextend'],function(require) {
     
 
     var Backbone = require('backbone'),
         Base;
+
+    require('underscore.mixin.deepextend');
 
     Base = Backbone.Collection.extend({
     });
@@ -3886,10 +3899,11 @@ define('chiropractor/hbs',['require','./hbs/view','./hbs/ifequal','./hbs/log'],f
 });
 
 /*global define*/
-define('chiropractor/main',['require','backbone','backbone.subroute','./views','./models','./collections','./routers','./debug','./hbs'],function(require) {
+define('chiropractor/main',['require','backbone','underscore','backbone.subroute','./views','./models','./collections','./routers','./debug','./hbs'],function(require) {
     
 
     var Backbone = require('backbone'),
+        _ = require('underscore'),
         SubRoute = require('backbone.subroute'),
         Views = require('./views'),
         Models = require('./models'),

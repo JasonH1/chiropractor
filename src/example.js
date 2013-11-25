@@ -12,7 +12,9 @@ define(function(require) {
         template = require('hbs!./../example/templates/example'),
         data = require('example/data'),
         example2 = require('example/example2'),
-        example3 = require('example/example3');
+        example3 = require('example/example3'),
+        example4 = require('example/example4');
+
 
     require('src/hbs');
 
