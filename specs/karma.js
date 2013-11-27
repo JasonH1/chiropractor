@@ -26,6 +26,7 @@ require.config({
         'backbone.subroute':    'bower_components/backbone.subroute/backbone.subroute',
         'backbone.validation':  'bower_components/backbone-validation/dist/backbone-validation-amd',
         'backbone.deep.model': 'bower_components/backbone-deep-model/distribution/deep-model',
+        'underscore.mixin.deepextend': 'lib/underscore.mixin.deepextend',
         // Testing Dependencies
         'sinon':                'bower_components/sinonjs/sinon',
         'es5-shim':             'bower_components/es5-shim/es5-shim',
@@ -56,6 +57,13 @@ require.config({
         'underscore': {
             exports: '_'
         },
+         'backbone.deep.model': {
+            deps: ['underscore.mixin.deepextend', 'backbone', 'underscore'],
+            exports: 'Backbone.DeepModel'
+        },
+        json3: {
+            exports: 'JSON'
+        },
         'jquery.cookie': {
             deps: ['jquery'],
             exports: 'jQuery.cookie'
@@ -74,6 +82,11 @@ require.config({
             deps: ['es5-shim']
         }
     },
+    deps: [
+        'jquery',
+        'hbs',
+        'underscore'
+    ],
     enforceDefine: true
 });
 
