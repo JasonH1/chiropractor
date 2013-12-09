@@ -3764,10 +3764,11 @@ define('chiropractor/models',['require','backbone','underscore','./models/auth',
 });
 
 /*global define*/
-define('chiropractor/collections',['require','backbone','underscore.mixin.deepextend'],function(require) {
+define('chiropractor/collections',['require','backbone','underscore','underscore.mixin.deepextend'],function(require) {
     
 
     var Backbone = require('backbone'),
+        _ = require('underscore'),
         Base;
 
     require('underscore.mixin.deepextend');
