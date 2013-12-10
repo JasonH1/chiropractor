@@ -2,7 +2,8 @@
 define(function(require) {
     'use strict';
 
-    var $ = require('jquery'),
+    var JSON = require('json-ie7'),
+        $ = require('jquery'),
         _ = require('underscore'),
         Handlebars = require('handlebars'),
         rowTemplates = {},

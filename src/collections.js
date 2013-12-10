@@ -7,6 +7,7 @@ define(function(require) {
         Base;
 
     require('underscore.mixin.deepextend');
+    require('backbone.crossdomain');
 
     Base = Backbone.Collection.extend({
     });

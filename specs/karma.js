@@ -27,6 +27,7 @@ require.config({
         'backbone.validation':  'bower_components/backbone-validation/dist/backbone-validation-amd',
         'backbone.deep.model': 'bower_components/backbone-deep-model/distribution/deep-model',
         'underscore.mixin.deepextend': 'lib/underscore.mixin.deepextend',
+        'backbone.crossdomain':         './lib/Backbone.CrossDomain',
         // Testing Dependencies
         'sinon':                'bower_components/sinonjs/sinon',
         'es5-shim':             'bower_components/es5-shim/es5-shim',

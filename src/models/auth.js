@@ -4,6 +4,7 @@ define(function(require) {
 
     var Backbone = require('backbone'),
         $ = require('jquery'),
+        JSON = require('json-ie7'),
         _ = require('underscore'),
         tokenCookie = 'wttoken',
         expirationWarningMinutes = 2,
