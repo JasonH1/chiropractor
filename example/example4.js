@@ -34,8 +34,13 @@ define(function (require) {
     }];
 
     ModelConstructor = Models.Base.extend({
-      url: "http://rodin-admin.cloud.wiser-ci.com/api/v1/topics/topic/company/ge"
+      url: "http://sachs-admin.dev.wiser-cloud.com/api/v1/file_tracker_version"
     });
+    ModelConstructor = Models.Base.extend({
+      url: "http://rodin-admin.cloud.wiser-ci.com/api/v1/topics?q=again(&*%20AND%20type.id:health-plan"
+    });
+
+
 
     CollectionConstructor = Collections.Base.extend({
       model: Model,
@@ -48,7 +53,7 @@ define(function (require) {
     Model.fetch().done(function(){
       //console.log(Model.toJSON());
       page = document.getElementById('page-layout');
-      console.log(JSON.stringify(Model));
+      //console.log(JSON.stringify(Model));
 
       page.innerHTML = page.innerHTML + template({
           model: Model,
