@@ -4,9 +4,12 @@ define(function (require) {
 
   var Backbone = require('backbone'),
     _ = require('underscore'),
+    JSON = require('json-ie7'),
+    $ = require('jquery'),
     auth = require('./models/auth'),
     BackboneDeepModel = require('backbone.deep.model'),
     Validation = require('backbone.validation'),
+    TemplateError = require('hbs!./views/templates/error/modelfetch'),
     Base,
     revision,
     userAgent,
@@ -25,6 +28,19 @@ define(function (require) {
   require('backbone.crossdomain');
 
   Base = BackboneDeepModel.DeepModel.extend({
+    errorHandler: function(response) {
+      var errorMessage;
+
+      switch(response.status) {
+        case 0:
+          errorMessage = "The API was unreachable";
+        case 503:
+          errorMessage = "There was an Error Communicating with the API";
+          break;
+          default:
+      }
+      $('body').before(TemplateError({ errorMessage: errorMessage, response: response }));
+    },
     sync: function (method, model, options) {
       // Setup the authentication handlers for the BaseModel
       //
@@ -33,13 +49,21 @@ define(function (require) {
         // doesnt work in ie7
         auth.sync.call(this, method, model, options);
       }
+      console.log(method);
+      console.log(options);
+      switch (method) {
+      case 'read':
+        $('chiropractor-error-box')
+        options.error = this.errorHandler;
+        break;
+      default:
+      }
       return Backbone.Model.prototype.sync.call(
         this, method, model, options
       );
     },
     parse: function (resp, options) {
       options = options || {};
-      console.log(JSON.stringify(resp.id));
       // We need to unwrap the old WiserTogether API envelop format.
       if (resp.data && resp.meta) {
         if (parseInt(resp.meta.status, 10) >= 400) {
@@ -81,7 +105,7 @@ define(function (require) {
     set: function (attrs, options) {
       // We need to allow the legacy errors to short circuit the Backbone
       // success handler in the case of a legacy server error.
-      console.log(JSON.stringify(options));
+      //console.log(JSON.stringify(options));
       if (options && options.legacyError) {
         delete options.legacyError;
         return false;
