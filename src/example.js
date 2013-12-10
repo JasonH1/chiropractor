@@ -2,7 +2,8 @@
 define(function(require) {
     'use strict';
 
-    var Backbone = require('backbone'),
+    var JSON = require('json-ie7'),
+        Backbone = require('backbone'),
         SubRoute = require('backbone.subroute'),
         Views = require('src/views'),
         Models = require('src/models'),
@@ -22,4 +23,5 @@ define(function(require) {
     page.innerHTML = template({ collection: data.collection, fields:data.fields });
     page.innerHTML = page.innerHTML + example2.html;
     page.innerHTML = page.innerHTML + example3.html;
+
 });

@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var _ = require('underscore'),
+        JSON = require('json-ie7'),
         $ = require('jquery'),
         Backbone = require('backbone'),
         Base = require('./base');
