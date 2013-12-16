@@ -27,7 +27,8 @@ require.config({
         'backbone.validation':  'bower_components/backbone-validation/dist/backbone-validation-amd',
         'backbone.deep.model': 'bower_components/backbone-deep-model/distribution/deep-model',
         'underscore.mixin.deepextend': 'lib/underscore.mixin.deepextend',
-        'backbone.crossdomain':         './lib/Backbone.CrossDomain',
+        'json-ie7': './lib/JSON',
+        'jquery.ie.cors':         './lib/jquery.ie.cors',
         // Testing Dependencies
         'sinon':                'bower_components/sinonjs/sinon',
         'es5-shim':             'bower_components/es5-shim/es5-shim',
@@ -62,17 +63,17 @@ require.config({
             deps: ['underscore.mixin.deepextend', 'backbone', 'underscore'],
             exports: 'Backbone.DeepModel'
         },
-        json3: {
+        'json-ie7': {
             exports: 'JSON'
+        },
+        'jquery.ie.cors': {
+          deps: ['jquery']
         },
         'jquery.cookie': {
             deps: ['jquery'],
             exports: 'jQuery.cookie'
         },
         // Testing Shims
-        json3: {
-            exports: 'JSON'
-        },
         expectjs: {
             exports: 'expect'
         },
@@ -85,6 +86,7 @@ require.config({
     },
     deps: [
         'jquery',
+        'jquery.ie.cors',
         'hbs',
         'underscore'
     ],

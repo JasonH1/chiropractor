@@ -25,18 +25,17 @@
             'json3': 'bower_components/json3/lib/json3',
             'underscore': 'bower_components/underscore/underscore',
             'backbone': 'bower_components/backbone-amd/backbone',
-            'jquery': 'bower_components/jquery/jquery-1.10.2',
+            'jquery': 'bower_components/jquery/jquery',
             'jquery.cookie': 'bower_components/jquery.cookie/jquery.cookie',
             'backbone.subroute': 'bower_components/backbone.subroute/backbone.subroute',
             'backbone.validation': 'bower_components/backbone-validation/dist/backbone-validation-amd',
             'backbone.deep.model': 'bower_components/backbone-deep-model/src/deep-model',
             'underscore.mixin.deepextend': '/lib/underscore.mixin.deepExtend',
-            'backbone.crossdomain':         './lib/Backbone.CrossDomain',
+            'jquery.ie.cors':         './lib/jquery.ie.cors',
             'chiropractor': 'src/main',
             'json-ie7':'./lib/JSON'
-           // 'chiropractor-compiled': './chiropractor'
         },
-
+        urlArgs: "bust="+(new Date()).getTime(),
         skipModuleInsertion: false,
         wrap: true,
 
@@ -64,6 +63,9 @@
             'json-ie7': {
                 exports: 'JSON'
             },
+            'jquery.ie.cors': {
+                deps: ['jquery']
+            },
             'jquery': {
                 deps: ['json-ie7'],
                 exports: 'jQuery'
@@ -77,6 +79,8 @@
         deps: [
             //'jquery',
             'hbs',
+            'jquery',
+            'jquery.ie.cors'
         ],
 
         enforceDefine: true

@@ -1,0 +1,8 @@
+<div id="chiropractor-error-box" style="color: #a94442;background-color: #f2dede;border-color: #ebccd1;padding: 15px;border: 1px solid transparent;border-radius: 4px;">
+<div aria-hidden="true" style="float:right;" onClick="javascript:var element = document.getElementById('chiropractor-error-box');element.parentNode.removeChild(element);">&times;</div>
+<div style="font-weight:bold">{{ model.errorMessage }}</div>
+<div>Message: {{ model.response.responseText }}</div>
+<div>Status: {{ model.response.statusText }}</div>
+<div>StatusCode: {{ model.response.status }}</div>
+<div>Url: <a href="{{ model.url }}">{{ model.url }}</a></div>
+</div>

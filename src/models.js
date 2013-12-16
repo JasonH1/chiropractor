@@ -25,36 +25,40 @@ define(function (require) {
   }
 
   require('underscore.mixin.deepextend');
-  require('backbone.crossdomain');
 
   Base = BackboneDeepModel.DeepModel.extend({
     errorHandler: function(response) {
       var errorMessage;
-
       switch(response.status) {
         case 0:
           errorMessage = "The API was unreachable";
+          break;
         case 503:
           errorMessage = "There was an Error Communicating with the API";
           break;
           default:
       }
-      $('body').before(TemplateError({ errorMessage: errorMessage, response: response }));
+      $('body').before(TemplateError({ url: this.url ,  errorMessage: errorMessage, response: response }));
+    },
+    successHandler: function(model, response, options) {
     },
     sync: function (method, model, options) {
       // Setup the authentication handlers for the BaseModel
       //
-      if (revision >= 8) {
+      if (revision >= 8 || !revision) {
         // Only call auth.sync on ie8+ because it currently
         // doesnt work in ie7
         auth.sync.call(this, method, model, options);
       }
-      console.log(method);
-      console.log(options);
       switch (method) {
       case 'read':
-        $('chiropractor-error-box')
-        options.error = this.errorHandler;
+        //Empty the error message box for other fetches
+        $('#chiropractor-error-box').empty();
+        if (this.enableErrorHandler) {
+          options.error = this.errorHandler;
+          // Timeout set to 30 seconds.
+          options.timeout = 30000;
+        }
         break;
       default:
       }
@@ -83,6 +87,7 @@ define(function (require) {
 
             if (options.error) {
               options.error(this, resp.data, options);
+
             }
           }
           // We do not want an error response to update the model
@@ -92,9 +97,7 @@ define(function (require) {
         }
         return resp.data;
       }
-      var data = Backbone.Model.prototype.parse.apply(this, arguments);
-      return data;
-      //return Backbone.Model.prototype.parse.apply(this, arguments);
+      return Backbone.Model.prototype.parse.apply(this, arguments);
     },
 
     fieldId: function (field, prefix) {
@@ -105,12 +108,10 @@ define(function (require) {
     set: function (attrs, options) {
       // We need to allow the legacy errors to short circuit the Backbone
       // success handler in the case of a legacy server error.
-      //console.log(JSON.stringify(options));
       if (options && options.legacyError) {
         delete options.legacyError;
         return false;
       }
-
       return BackboneDeepModel.DeepModel.prototype.set.apply(this, arguments);
     }
   });

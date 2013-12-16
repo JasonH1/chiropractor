@@ -108,7 +108,7 @@ module.exports = function(grunt) {
                 immed: true,
                 jquery: true,
                 latedef: true,
-                newcap: true,
+                newcap: false,
                 noarg: true,
                 node: true,
                 nonew: true,
