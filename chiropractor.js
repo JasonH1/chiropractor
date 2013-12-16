@@ -2451,8 +2451,49 @@ return t;
 });
 /* END_TEMPLATE */
 ;
+/* START_TEMPLATE */
+define('hbs!chiropractor/views/templates/row/error_messagebox',['hbs','handlebars'], function( hbs, Handlebars ){ 
+var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  helpers = helpers || Handlebars.helpers;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<div id=\"chiropractor-error-box\" style=\"color: #a94442;background-color: #f2dede;border-color: #ebccd1;padding: 15px;border: 1px solid transparent;border-radius: 4px;\">\r\n<div aria-hidden=\"true\" style=\"float:right;\" onClick=\"javascript:var element = document.getElementById('chiropractor-error-box');element.parentNode.removeChild(element);\">&times;</div>\r\n<div style=\"font-weight:bold\">";
+  stack1 = depth0.model;
+  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.errorMessage;
+  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  buffer += escapeExpression(stack1) + "</div>\r\n<div>Message: ";
+  stack1 = depth0.model;
+  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.response;
+  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.responseText;
+  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  buffer += escapeExpression(stack1) + "</div>\r\n<div>Status: ";
+  stack1 = depth0.model;
+  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.response;
+  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.statusText;
+  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  buffer += escapeExpression(stack1) + "</div>\r\n<div>StatusCode: ";
+  stack1 = depth0.model;
+  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.response;
+  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.status;
+  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  buffer += escapeExpression(stack1) + "</div>\r\n<div>Url: <a href=\"";
+  stack1 = depth0.model;
+  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.url;
+  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  buffer += escapeExpression(stack1) + "\">";
+  stack1 = depth0.model;
+  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.url;
+  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  buffer += escapeExpression(stack1) + "</a></div>\r\n</div>";
+  return buffer;});
+Handlebars.registerPartial('chiropractor_views_templates_row_error_messagebox', t);
+return t;
+});
+/* END_TEMPLATE */
+;
 /*global define*/
-define('chiropractor/views/row',['require','json-ie7','jquery','underscore','handlebars','hbs!./templates/row/row'],function(require) {
+define('chiropractor/views/row',['require','json-ie7','jquery','underscore','handlebars','hbs!./templates/row/row','hbs!./templates/row/error_messagebox'],function(require) {
     
 
     var JSON = require('json-ie7'),
@@ -2460,10 +2501,12 @@ define('chiropractor/views/row',['require','json-ie7','jquery','underscore','han
         _ = require('underscore'),
         Handlebars = require('handlebars'),
         rowTemplates = {},
-        row = require('hbs!./templates/row/row');
+        row = require('hbs!./templates/row/row'),
+        ErrorTemplate = require('hbs!./templates/row/error_messagebox');
 
         rowTemplates = {
-            'row': row
+            'row': row,
+            'error': ErrorTemplate
         };
 
        Handlebars.registerHelper('row', function(type, model, fieldName) {
@@ -4198,35 +4241,17 @@ define('underscore.mixin.deepextend',['require','underscore'],function(require) 
 define('hbs!chiropractor/views/templates/error/modelfetch',['hbs','handlebars'], function( hbs, Handlebars ){ 
 var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   helpers = helpers || Handlebars.helpers;
-  var buffer = "", stack1, foundHelper, functionType="function", escapeExpression=this.escapeExpression;
+  var stack1, stack2, foundHelper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div id=\"chiropractor-error-box\" style=\"color: #a94442;background-color: #f2dede;border-color: #ebccd1;padding: 15px;border: 1px solid transparent;border-radius: 4px;\">\r\n<div aria-hidden=\"true\" style=\"float:right;\" onClick=\"javascript:var element = document.getElementById('chiropractor-error-box');element.parentNode.removeChild(element);\">&times;</div>\r\n<div style=\"font-weight:bold\">";
-  foundHelper = helpers.errorMessage;
-  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.errorMessage; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "</div>\r\n<div>Message: ";
-  stack1 = depth0.response;
-  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.responseText;
-  stack1 = typeof stack1 === functionType ? stack1() : stack1;
-  buffer += escapeExpression(stack1) + "</div>\r\n<div>Status: ";
-  stack1 = depth0.response;
-  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.statusText;
-  stack1 = typeof stack1 === functionType ? stack1() : stack1;
-  buffer += escapeExpression(stack1) + "</div>\r\n<div>StatusCode: ";
-  stack1 = depth0.response;
-  stack1 = stack1 == null || stack1 === false ? stack1 : stack1.status;
-  stack1 = typeof stack1 === functionType ? stack1() : stack1;
-  buffer += escapeExpression(stack1) + "</div>\r\n<div>Url: <a href=\"";
-  foundHelper = helpers.url;
-  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.url; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "\">";
-  foundHelper = helpers.url;
-  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.url; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "</a></div>\r\n</div>";
-  return buffer;});
+  stack1 = {};
+  stack2 = depth0.response;
+  stack1['response'] = stack2;
+  stack2 = depth0.url;
+  stack1['url'] = stack2;
+  foundHelper = helpers.row;
+  stack1 = foundHelper ? foundHelper.call(depth0, "error", depth0, {hash:stack1}) : helperMissing.call(depth0, "row", "error", depth0, {hash:stack1});
+  return escapeExpression(stack1);});
 Handlebars.registerPartial('chiropractor_views_templates_error_modelfetch', t);
 return t;
 });
@@ -4259,7 +4284,6 @@ define('chiropractor/models',['require','backbone','underscore','json-ie7','jque
   }
 
   require('underscore.mixin.deepextend');
-  //require('backbone.crossdomain');
 
   Base = BackboneDeepModel.DeepModel.extend({
     errorHandler: function(response) {
@@ -4280,20 +4304,23 @@ define('chiropractor/models',['require','backbone','underscore','json-ie7','jque
     sync: function (method, model, options) {
       // Setup the authentication handlers for the BaseModel
       //
-      if (revision >= 8) {
+      if (revision >= 8 || !revision) {
         // Only call auth.sync on ie8+ because it currently
         // doesnt work in ie7
         auth.sync.call(this, method, model, options);
       }
       switch (method) {
       case 'read':
-        //$('chiropractor-error-box')
-        options.error = this.errorHandler;
-        //options.success = this.successHandler;
+        //Empty the error message box for other fetches
+        $('#chiropractor-error-box').empty();
+        if (this.enableErrorHandler) {
+          options.error = this.errorHandler;
+          // Timeout set to 30 seconds.
+          options.timeout = 30000;
+        }
         break;
       default:
       }
-      //console.log(JSON.stringify(model));
       return Backbone.Model.prototype.sync.call(
         this, method, model, options
       );
@@ -4356,24 +4383,57 @@ define('chiropractor/models',['require','backbone','underscore','json-ie7','jque
   };
 });
 /*global define*/
-define('chiropractor/collections',['require','backbone','underscore','underscore.mixin.deepextend'],function(require) {
-    
+define('chiropractor/collections',['require','backbone','underscore','hbs!./views/templates/error/modelfetch','underscore.mixin.deepextend'],function (require) {
+  
 
-    var Backbone = require('backbone'),
-        _ = require('underscore'),
-        Base;
+  var Backbone = require('backbone'),
+    _ = require('underscore'),
+    Base,
+    TemplateError = require('hbs!./views/templates/error/modelfetch');
 
-    require('underscore.mixin.deepextend');
-    //require('backbone.crossdomain');
+  require('underscore.mixin.deepextend');
 
-    Base = Backbone.Collection.extend({
-    });
+  Base = Backbone.Collection.extend({
+    errorHandler: function (response) {
+      var errorMessage;
+      switch (response.status) {
+      case 0:
+        errorMessage = "The API was unreachable";
+        break;
+      case 503:
+        errorMessage = "There was an Error Communicating with the API";
+        break;
+      default:
+      }
+      $('body').before(TemplateError({
+        url: this.url,
+        errorMessage: errorMessage,
+        response: response
+      }));
+    },
+    sync: function (method, model, options) {
+      switch (method) {
+      case 'read':
+        //Empty the error message box for other fetches
+        $('#chiropractor-error-box').empty();
+        if (this.enableErrorHandler) {
+          options.error = this.errorHandler;
+          // Timeout set to 30 seconds.
+          options.timeout = 30000;
+        }
+        break;
+      default:
+      }
+      return Backbone.Collection.prototype.sync.call(
+        this, method, model, options
+      );
+    }
+  });
 
-    return {
-        Base: Base
-    };
+  return {
+    Base: Base
+  };
 });
-
 /*global define*/
 define('chiropractor/routers',['require','backbone'],function(require) {
     
