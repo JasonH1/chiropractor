@@ -26,7 +26,7 @@ require.config({
     'backbone.deep.model': 'bower_components/backbone-deep-model/src/deep-model',
     'underscore.mixin.deepextend': './lib/underscore.mixin.deepextend',
     'json-ie7': './lib/JSON',
-    'backbone.crossdomain':         './lib/Backbone.CrossDomain'
+    'jquery.ie.cors':         './lib/jquery.ie.cors'
   },
 
   skipModuleInsertion: false,
@@ -53,6 +53,9 @@ require.config({
     'json-ie7': {
       exports: 'JSON'
     },
+    'jquery.ie.cors': {
+      deps: ['jquery']
+    },
     'jquery.cookie': {
       deps: ['jquery'],
       exports: 'jQuery.cookie'
@@ -61,6 +64,7 @@ require.config({
 
   deps: [
     'jquery',
+    'jquery.ie.cors',
     'hbs',
     'underscore'
   ],

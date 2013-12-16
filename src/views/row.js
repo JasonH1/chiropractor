@@ -7,10 +7,12 @@ define(function(require) {
         _ = require('underscore'),
         Handlebars = require('handlebars'),
         rowTemplates = {},
-        row = require('hbs!./templates/row/row');
+        row = require('hbs!./templates/row/row'),
+        ErrorTemplate = require('hbs!./templates/row/error_messagebox');
 
         rowTemplates = {
-            'row': row
+            'row': row,
+            'error': ErrorTemplate
         };
 
        Handlebars.registerHelper('row', function(type, model, fieldName) {

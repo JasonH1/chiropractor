@@ -20,45 +20,54 @@ define(function (require) {
     fields,
     page;
 
-    fields = [{
-        id: '',
-        name: 'disable?',
-        fieldtype: 'checkbox'
-    }, {
-        id: 'name',
-        name: 'Name',
-        fieldtype: 'customfield'
-    }, {
-        id: 'description',
-        name: 'Description'
-    }];
+  fields = [{
+    id: '',
+    name: 'disable?',
+    fieldtype: 'checkbox'
+  }, {
+    id: 'name',
+    name: 'Name',
+    fieldtype: 'customfield'
+  }, {
+    id: 'description',
+    name: 'Description'
+  }];
 
-    ModelConstructor = Models.Base.extend({
-      url: "http://sachs-admin.dev.wiser-cloud.com/api/v1/file_tracker_version"
-    });
-    ModelConstructor = Models.Base.extend({
-      url: "http://rodin-admin.cloud.wiser-ci.com/api/v1/topics?q=again(&*%20AND%20type.id:health-plan"
-    });
-
-
-
-    CollectionConstructor = Collections.Base.extend({
-      model: Model,
-      url: "http://rodin-admin.cloud.wiser-ci.com/api/v1/topics?q=type.id:health-plan" // Remove later when attaching to rodin
-    });
+  ModelConstructor = Models.Base.extend({
+    //enableErrorHandler: true,
+    url: "http://rodin-admin.cloud.wiser-ci.com/api/v1/topics/topic/company/webeffects"
+  });
+  //ModelConstructor = Models.Base.extend({
+  //  enableErrorHandler: true,
+  //  url: "http://rodin-admin.cloud.wiser-ci.com/api/v1/topics?q=again(&*%20AND%20type.id:health-plan"
+  //});
 
 
-    Model = new ModelConstructor({});
 
-    Model.fetch().done(function(){
-      //console.log(Model.toJSON());
-      page = document.getElementById('page-layout');
-      //console.log(JSON.stringify(Model));
+  CollectionConstructor = Collections.Base.extend({
+    model: Model,
+    url: "http://rodin-admin.cloud.wiser-ci.com/api/v1/topics?q=type.id:health-plan" // Remove later when attaching to rodin
+  });
 
-      page.innerHTML = page.innerHTML + template({
+
+  Model = new ModelConstructor({});
+
+  Model.fetch().done(function () {
+    page = document.getElementById('page-layout');
+    if (window.XDomainRequest) {
+      window.setTimeout(function () {
+        page.innerHTML = page.innerHTML + template({
           model: Model,
           fields: fields
         });
-    });
+      }, 10);
+    } else {
+      page.innerHTML = page.innerHTML + template({
+        model: Model,
+        fields: fields
+      });
+    }
+
+  });
 
 });

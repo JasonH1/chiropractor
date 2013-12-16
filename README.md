@@ -63,7 +63,7 @@ install all of the dependencies:
 
 In order to compile the Chiropractor code for release you must run:
 
-	grunt
+    grunt
 
 Which will generate `chiropractor.js` as well as `chiropractor.min.js` in the
 root of the project. Whenever you wish to run this command, please be sure to
@@ -74,12 +74,12 @@ Tests
 
 There are two ways to run tests:
 
-	npm test
+    npm test
 
 Or if you want more control over how your tests are run (such as continuous
 testing with auto-running tests on file changes you can run:
 
-	./node_modules/.bin/karma start --dev --browsers Chrome,PhantomJS
+    ./node_modules/.bin/karma start --dev --browsers Chrome,PhantomJS
 
 Previewing
 -----
@@ -87,10 +87,18 @@ Previewing
 You can preview example functionality of Chiropractor by first running:
 
     grunt devserver
-    
+
 
 goto: http://localhost:8888
 
 Also you check out the /example folder for the source code of these examples
 in how to integrate Chiropractor into your project.
-    
+
+Enabling ErrorHandling
+-----
+
+You can enable Chiropractor default error handler for api unreachable or error
+codes by setting the property: enableErrorHandler: true in your model or collection.
+
+You can also override or create your own custom error template by overriding the row "error" template with your own.
+

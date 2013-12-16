@@ -14,7 +14,9 @@ define(function(require) {
         data = require('example/data'),
         example2 = require('example/example2'),
         example3 = require('example/example3'),
-        example4 = require('example/example4');
+        example4 = require('example/example4'),
+        example5 = require('example/example5');
+
 
 
     require('src/hbs');
