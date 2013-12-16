@@ -6,12 +6,12 @@ define(function(require) {
         $ = require('jquery'),
         _ = require('underscore'),
         Handlebars = require('handlebars'),
-        rowTemplates = {},
-        row = require('hbs!./templates/row/row'),
+        RowTemplates = {},
+        Row = require('hbs!./templates/row/row'),
         ErrorTemplate = require('hbs!./templates/row/error_messagebox');
 
-        rowTemplates = {
-            'row': row,
+        RowTemplates = {
+            'row': Row,
             'error': ErrorTemplate
         };
 
@@ -19,7 +19,7 @@ define(function(require) {
             // template helper in the form of:
             //
             //      {{ field 'text' model 'fieldname' [attrName="attrValue"]*}}
-            var current = rowTemplates[type],
+            var current = RowTemplates[type],
                 options = arguments[arguments.length - 1],
                 opts = options.hash || {},
                 id = '',
@@ -33,9 +33,9 @@ define(function(require) {
         });
 
     return {
-        Templates: rowTemplates,
+        Templates: RowTemplates,
         addTemplate: function(name,template) {
-            rowTemplates[name] = template;
+            RowTemplates[name] = template;
         }
     };
 });

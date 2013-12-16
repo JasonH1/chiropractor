@@ -11,14 +11,14 @@ define(function (require) {
     Routers = require('src/routers'),
     Handlebars = require('handlebars'),
     template = require('hbs!./../example/templates/example5'),
-    data = require('example/data'),
-    field = Views.Field,
+    Data = require('example/data'),
+    Field = Views.Field,
     ModelConstructor,
     Model,
     CollectionConstructor,
     Collection,
-    fields,
-    page;
+    Fields,
+    Page;
 
   ModelConstructor = Models.Base.extend({
     enableErrorHandler: true,
@@ -27,8 +27,8 @@ define(function (require) {
 
   Model = new ModelConstructor({});
   Model.fetch().done(function () {
-    page = document.getElementById('page-layout');
-    page.innerHTML = page.innerHTML + template({
+    Page = document.getElementById('page-layout');
+    Page.innerHTML = Page.innerHTML + template({
       model: Model
     });
   });

@@ -11,16 +11,16 @@ define(function (require) {
     Validation = require('backbone.validation'),
     TemplateError = require('hbs!./views/templates/error/modelfetch'),
     Base,
-    revision,
-    userAgent,
-    regExp;
+    Revision,
+    UserAgent,
+    RegExpression;
 
   // Detecting IE
   if (navigator.appName === 'Microsoft Internet Explorer') {
-    userAgent = navigator.userAgent;
-    regExp = new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})");
-    if (regExp.exec(userAgent) !== null) {
-      revision = parseFloat(RegExp.$1);
+    UserAgent = navigator.userAgent;
+    RegExpression = new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})");
+    if (RegExpression.exec(UserAgent) !== null) {
+      Revision = parseFloat(RegExpression.$1);
     }
   }
 
@@ -45,8 +45,8 @@ define(function (require) {
     sync: function (method, model, options) {
       // Setup the authentication handlers for the BaseModel
       //
-      if (revision >= 8 || !revision) {
-        // Only call auth.sync on ie8+ because it currently
+      if (Revision >= 8 || !Revision) {
+        // Only call auth.sync on ie8+ or other browsers because it currently
         // doesnt work in ie7
         auth.sync.call(this, method, model, options);
       }

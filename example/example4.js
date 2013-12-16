@@ -11,16 +11,16 @@ define(function (require) {
     Routers = require('src/routers'),
     Handlebars = require('handlebars'),
     template = require('hbs!./../example/templates/example4'),
-    data = require('example/data'),
-    field = Views.Field,
+    Data = require('example/data'),
+    Field = Views.Field,
     ModelConstructor,
     Model,
     CollectionConstructor,
     Collection,
-    fields,
-    page;
+    Fields,
+    Page;
 
-  fields = [{
+  Fields = [{
     id: '',
     name: 'disable?',
     fieldtype: 'checkbox'
@@ -34,37 +34,26 @@ define(function (require) {
   }];
 
   ModelConstructor = Models.Base.extend({
-    //enableErrorHandler: true,
     url: "http://rodin-admin.cloud.wiser-ci.com/api/v1/topics/topic/company/webeffects"
   });
-  //ModelConstructor = Models.Base.extend({
-  //  enableErrorHandler: true,
-  //  url: "http://rodin-admin.cloud.wiser-ci.com/api/v1/topics?q=again(&*%20AND%20type.id:health-plan"
-  //});
-
-
-
-  CollectionConstructor = Collections.Base.extend({
-    model: Model,
-    url: "http://rodin-admin.cloud.wiser-ci.com/api/v1/topics?q=type.id:health-plan" // Remove later when attaching to rodin
-  });
-
 
   Model = new ModelConstructor({});
 
   Model.fetch().done(function () {
-    page = document.getElementById('page-layout');
+    Page = document.getElementById('page-layout');
     if (window.XDomainRequest) {
+      // If ie7 then do this
       window.setTimeout(function () {
-        page.innerHTML = page.innerHTML + template({
+        Page.innerHTML = Page.innerHTML + template({
           model: Model,
-          fields: fields
+          fields: Fields
         });
       }, 10);
     } else {
-      page.innerHTML = page.innerHTML + template({
+      // other browsers do this
+      Page.innerHTML = Page.innerHTML + template({
         model: Model,
-        fields: fields
+        fields: Fields
       });
     }
 
