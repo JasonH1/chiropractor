@@ -3195,7 +3195,7 @@ define('underscore.mixin.deepextend',['require','underscore'],function(require) 
   };
 
   isBasicObject = function(object) {
-    if (object === null) {
+    if (object === null || object === undefined) {
       return false;
     }
     return (object.prototype === {}.prototype || object.prototype === Object.prototype) && _.isObject(object) && !_.isArray(object) && !_.isFunction(object) && !_.isDate(object) && !_.isRegExp(object) && !_.isArguments(object);
