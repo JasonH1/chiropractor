@@ -2371,7 +2371,7 @@ define('chiropractor/views/field',['require','json-ie7','jquery','underscore','h
         label = require('hbs!./templates/fields/label');
 
         fieldTemplates = {
-            'default': label
+            'defaults': label
         };
 
        Handlebars.registerHelper('field', function(type, model, fieldName) {
@@ -2386,7 +2386,7 @@ define('chiropractor/views/field',['require','json-ie7','jquery','underscore','h
                 value = '';
 
             if (!template) {
-               template = fieldTemplates.default;
+               template = fieldTemplates.defaults;
             }
 
             if (model) {

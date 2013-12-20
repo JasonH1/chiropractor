@@ -10,7 +10,7 @@ define(function(require) {
         label = require('hbs!./templates/fields/label');
 
         fieldTemplates = {
-            'default': label
+            'defaults': label
         };
 
        Handlebars.registerHelper('field', function(type, model, fieldName) {
@@ -25,7 +25,7 @@ define(function(require) {
                 value = '';
 
             if (!template) {
-               template = fieldTemplates.default;
+               template = fieldTemplates.defaults;
             }
 
             if (model) {
