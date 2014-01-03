@@ -8,12 +8,34 @@ define(function(require) {
         Views = require('./views'),
         Models = require('./models'),
         Collections = require('./collections'),
-        Routers = require('./routers');
+        Routers = require('./routers'),
+        Channels = {},
+        Subscribe,
+        Publish;
 
     require('./debug');
     require('./hbs');
 
+    Subscribe = function(channel,object) {
+      if (!Channels[channel]) {
+        Channels[channel] = [];
+        Channels[channel].push(object);
+      }
+    };
+    Publish = function(channel,options) {
+      if (Channels[channel]) {
+        var listeners = Channels[channel];
+        _.each(listeners, function(listener){
+          listener.trigger(channel,options);
+        });
+      }
+    };
+
     return {
+        // Channel events
+        Subscribe: Subscribe,
+        Publish: Publish,
+        Channels: Channels,
         Collection: Collections.Base,
         Collections: Collections,
         Events: Backbone.Events,
